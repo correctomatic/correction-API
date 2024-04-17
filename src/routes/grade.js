@@ -85,7 +85,7 @@ async function routes(fastify, _options) {
           message: 'Work enqueued for grading'
         }
       }catch(e) {
-        logger.error('Error grading work:', e)
+        logger.error('Error grading work:'+ JSON.stringify(e))
         return {
           success: false,
           message: 'Error grading work'
