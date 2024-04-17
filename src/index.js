@@ -12,6 +12,7 @@ import logger from './logger.js'
 
 // routes
 import hello from './routes/hello.js'
+import grade from './routes/grade.js'
 
 const DEFAULT_PORT = 3000
 const PORT = process.env.PORT || DEFAULT_PORT // Heroku assigns you a port
@@ -28,6 +29,7 @@ fastify.register(multipart)
 // Run the server!
 try {
   fastify.register(hello)
+  fastify.register(grade)
 
   fastify.listen({ port: PORT, host: '0.0.0.0' })
 
