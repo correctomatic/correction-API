@@ -1,4 +1,5 @@
-// import * as fs from 'fs'
+import dotenv from 'dotenv'
+dotenv.config()
 
 import Fastify from 'fastify'
 import fastifyCors from '@fastify/cors'

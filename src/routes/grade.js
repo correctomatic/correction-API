@@ -2,12 +2,13 @@ import fs from 'fs'
 import path from 'path'
 
 import logger from '../logger.js'
-import { GRADE_SCHEMA } from '../schemas/grade_schemas.js'
+// TO-DO: Schemas are not working for multipart forms
+// import { GRADE_SCHEMA } from '../schemas/grade_schemas.js'
 
 import { ensureDirectoryExists } from '../lib/utils.js'
 import { getMessageChannel, PENDING_QUEUE } from '../rabbitmq_connection.js'
 
-const UPLOAD_DIRECTORY = '/tmp/correctomatic-uploads'
+const UPLOAD_DIRECTORY =  process.env.UPLOAD_DIRECTORY
 
 
 // Module initialization
