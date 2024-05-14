@@ -23,13 +23,6 @@ async function writeFileToDisk(data) {
   return uploadedFile
 }
 
-// We reuse the connection to the message queue
-let channel = null
-async function getChannel() {
-  if(channel) return channel
-  return channel = await getMessageChannel()
-}
-
 async function routes(fastify, _options) {
 
   // This API enqueues the result
