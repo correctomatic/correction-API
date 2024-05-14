@@ -1,13 +1,13 @@
 import fs from 'fs'
 import path from 'path'
-import env from '../env.js'
+import env from '../config/env.js'
 
 import logger from '../logger.js'
 // TO-DO: Schemas are not working for multipart forms
 // import { GRADE_SCHEMA } from '../schemas/grade_schemas.js'
 
 import { ensureDirectoryExists } from '../lib/utils.js'
-import { getMessageChannel, PENDING_QUEUE } from '../rabbitmq_connection.js'
+import { putInPendingQueue } from '../lib/bullmq.js'
 
 const UPLOAD_DIRECTORY =  env.UPLOAD_DIRECTORY
 
@@ -28,13 +28,6 @@ let channel = null
 async function getChannel() {
   if(channel) return channel
   return channel = await getMessageChannel()
-}
-
-async function putInPendingQueue(message) {
-  const channel = await getChannel()
-  const messageBuffer = Buffer.from(JSON.stringify(message))
-  channel.sendToQueue(PENDING_QUEUE, messageBuffer, { persistent: true })
-  // console.log('Message sent to running queue')
 }
 
 async function routes(fastify, _options) {

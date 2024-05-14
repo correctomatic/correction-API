@@ -30,7 +30,7 @@ You have the schemas in `grade_schemas.js`:
 Example request from command line:
 
 ```sh
-API_SERVER=http://localhost:3000 # This is where this project is running
+API_SERVER=http://localhost:8080 # This is where this project is running
 CALLBACK_URL=http://localhost:9000 # To receive the results
 ASSIGNMENT_ID="<id of the assigntment, currently the image name>"
 WORK_ID=$(openssl rand -hex 4) # An internal id for this job, this is generating a random one

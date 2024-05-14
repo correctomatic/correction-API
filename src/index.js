@@ -1,4 +1,4 @@
-import env from './env.js'
+import env from './config/env.js'
 
 import Fastify from 'fastify'
 import fastifyCors from '@fastify/cors'
