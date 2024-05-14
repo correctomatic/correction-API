@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import env from '../env.js'
 
 import logger from '../logger.js'
 // TO-DO: Schemas are not working for multipart forms
@@ -8,7 +9,7 @@ import logger from '../logger.js'
 import { ensureDirectoryExists } from '../lib/utils.js'
 import { getMessageChannel, PENDING_QUEUE } from '../rabbitmq_connection.js'
 
-const UPLOAD_DIRECTORY =  process.env.UPLOAD_DIRECTORY
+const UPLOAD_DIRECTORY =  env.UPLOAD_DIRECTORY
 
 
 // Module initialization

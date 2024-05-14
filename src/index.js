@@ -1,5 +1,4 @@
-import dotenv from 'dotenv'
-dotenv.config()
+import env from './env.js'
 
 import Fastify from 'fastify'
 import fastifyCors from '@fastify/cors'
@@ -15,8 +14,7 @@ import logger from './logger.js'
 import hello from './routes/hello.js'
 import grade from './routes/grade.js'
 
-const DEFAULT_PORT = 3000
-const PORT = process.env.PORT || DEFAULT_PORT // Heroku assigns you a port
+const PORT = env.PORT
 
 const fastify = Fastify({
   logger
