@@ -45,17 +45,21 @@ async function routes(fastify, _options) {
 
       try {
         const data = await req.file()
+        logger.debug('Received file for grading')
         const uploadedFile = await writeFileToDisk(data)
+        logger.debug('File saved to disk:'+ uploadedFile)
 
         // This MUST be after reading the file
         const work_id = data.fields.work_id.value
         const assignment_id = data.fields.assignment_id.value
         const callback = data.fields.callback.value
+        logger.debug(`Job data: work_id=${work_id}, assignment_id=${assignment_id}, callback=${callback}`)
 
         // TODO: need a list of exercises / images
         // At the moment we use assignment_id, but this is a security risk
         // const containerImage = image('correction-test-1')
         const containerImage = image(assignment_id)
+        logger.debug('Container image for grading:'+ containerImage)
 
         // Put the mensage in the queue
         const message = {
@@ -65,6 +69,7 @@ async function routes(fastify, _options) {
           callback
         }
 
+        logger.debug('Enqueuing work for grading:'+ JSON.stringify(message))
         await putInPendingQueue(message)
         logger.info('Work enqueued for grading:'+ JSON.stringify(message))
 
@@ -73,7 +78,7 @@ async function routes(fastify, _options) {
           message: 'Work enqueued for grading'
         }
       }catch(e) {
-        logger.error('Error grading work:'+ JSON.stringify(e))
+        logger.error('Error grading work:'+ JSON.stringify(e.message))
         return {
           success: false,
           message: 'Error grading work'
