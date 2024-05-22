@@ -1,18 +1,15 @@
 import env from './config/env.js'
+import { join } from 'node:path'
 
 import Fastify from 'fastify'
+import AutoLoad from '@fastify/autoload'
 import fastifyCors from '@fastify/cors'
 import fastifySwagger from "@fastify/swagger"
 import fastifySwaggerUi from "@fastify/swagger-ui"
 import multipart from '@fastify/multipart'
-
 import { swaggerOptions, swaggerUiOptions } from './swagger.js'
 
 import logger from './logger.js'
-
-// routes
-import hello from './routes/hello.js'
-import grade from './routes/grade.js'
 
 const PORT = env.PORT
 
@@ -27,8 +24,9 @@ fastify.register(multipart)
 
 // Run the server!
 try {
-  fastify.register(hello)
-  fastify.register(grade)
+  fastify.register(AutoLoad, {
+    dir: join(import.meta.dirname, 'routes'),
+  })
 
   fastify.listen({ port: PORT, host: '0.0.0.0' })
 
