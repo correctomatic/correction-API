@@ -7,7 +7,7 @@ const GRADE_REQUEST_SCHEMA = {
     callback: { type: 'string' },
     file: { type: 'object', format: 'binary' }
   },
-  required: ['work_id', 'assignment_id', 'callback', 'file'],
+  required: ['assignment_id', 'callback', 'file'],
   additionalProperties: false
 }
 
@@ -15,14 +15,24 @@ const GRADE_RESPONSE_SCHEMA = {
   type: 'object',
   required: ['sucess', 'message'],
   properties: {
-    sucess: { type: 'boolean' },
+    sucess: { "enum": [ true ] },
+    message: { type: 'string' },
+  }
+}
+
+const GRADE_ERROR_RESPONSE_SCHEMA = {
+  type: 'object',
+  required: ['success', 'message'],
+  properties: {
+    success: { "enum": [ false ] },
     message: { type: 'string' },
   }
 }
 
 const GRADE_RESPONSE = {
-  200: GRADE_RESPONSE_SCHEMA
-  // What to do on errors¿
+  200: GRADE_RESPONSE_SCHEMA,
+  400: GRADE_ERROR_RESPONSE_SCHEMA,
+  500: GRADE_ERROR_RESPONSE_SCHEMA,
 }
 
 const GRADE_SCHEMA = {
@@ -34,33 +44,6 @@ const GRADE_SCHEMA = {
   body: GRADE_REQUEST_SCHEMA,
   response: GRADE_RESPONSE
 }
-
-
-// app.post( '/upload', {
-//   schema: {
-//     description: 'Upload a File, the field name should be "file"',
-//     tags: [ 'Files' ],
-//     summary: 'Upload',
-//     consumes: ['multipart/form-data'],
-//     body: {
-//       type: 'object',
-//       required: ['file'],
-//       properties: {
-//         file: { $ref: '#mySharedSchema' }
-//       }
-//     },
-//     response: {
-//       201: {
-//         description: 'Upload OK',
-//         type: 'object'
-//       },
-//       400: {
-//         description: 'Bad Request',
-//         type: 'object'
-//       }
-//     }
-//   }
-// }
 
 export {
   GRADE_SCHEMA,
