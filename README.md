@@ -1,7 +1,35 @@
+# Correctomatic API
+
+Work in progress. Pending:
+- Assignments / image database
+- Security
+- Use a more flexible system for sharing the exercises with the correctomatic processes
+- Validate multipart forms with openapi schemas
+
+This API is the entry point for launching corrections. It provides and endpoint, `/grade`, that will upload the file
+to a shared folder and use BullMQ to create a correction task.
+
+Be careful, currently there is no security implemented: if someone has access to the API can run arbitrary containers
+in the server.
 
 ## Configuration
 
-TODO: Redis configuration
+The API uses an .env file for the configuration. It must be placed in the app's directory. The most important entries
+are for configuring the access to the Redis server:
+
+```sh
+REDIS_HOST=<redis server address>
+...
+REDIS_PASSWORD=<password>
+```
+
+You will need to configure a shared folder between the API and the correction processes:
+```sh
+# Directory where uploaded files are uploaded and shared
+UPLOAD_DIRECTORY=/tmp
+```
+
+The log level can also be configured for debuggin purposes. The `QUEUE_NAME` is standard, you should'nt modify it.
 
 ## Endpoints
 
@@ -49,7 +77,3 @@ You should open a server for receiving the results, ie, with netcat:
 ```sh
 nc -lk 9000
 ```
-
-## Notes and TODOs
-- **TO-DO**: Assignments / image database
-- **TO-DO**: I've been unable to validate multipart forms with openapi schemas
