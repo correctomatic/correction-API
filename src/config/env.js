@@ -8,6 +8,8 @@ const DEFAULT_ENVIRONMENT = 'production'
 const DEFAULT_LOG_LEVEL = 'info'
 const DEFAULT_LOG_FILE = 'correctomatic.log'
 
+const DEFAULT_UPLOAD_DIRECTORY = '/tmp/uploads'
+
 const REDIS_DEFAULTS = {
   host: 'localhost',
   port: 6379,
@@ -15,7 +17,6 @@ const REDIS_DEFAULTS = {
   password: '',
 }
 const PENDING_QUEUE = 'pending_corrections'
-
 
 const redisConfig = {
   host: process.env.REDIS_HOST || REDIS_DEFAULTS.host,
@@ -40,5 +41,5 @@ export default {
     }
   },
 
-  UPLOAD_DIRECTORY: process.env.UPLOAD_DIRECTORY
+  UPLOAD_DIRECTORY: process.env.UPLOAD_DIRECTORY || DEFAULT_UPLOAD_DIRECTORY
 }
