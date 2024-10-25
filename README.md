@@ -71,6 +71,9 @@ curl --request POST \
   --form file=@$FILE \
   --form work_id=$WORK_ID \
   --form assignment_id=$ASSIGNMENT_ID \
+  --form param="EXERCISE=exercise 6" \
+  --form param="LANGUAGE=javascript"
+  --form param=tututu=lalala
   --form callback=http://localhost:9000
 ```
 
