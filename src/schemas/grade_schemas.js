@@ -5,7 +5,11 @@ const GRADE_REQUEST_SCHEMA = {
     work_id: { type: 'string' },
     assignment_id: { type: 'string' },
     callback: { type: 'string' },
-    file: { type: 'object', format: 'binary' }
+    file: { type: 'object', format: 'binary' },
+    params: {
+      type: 'array',
+      items: { type: 'string' }
+    }
   },
   required: ['assignment_id', 'callback', 'file'],
   additionalProperties: false
