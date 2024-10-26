@@ -17,6 +17,13 @@ ensureDirectoryExists(UPLOAD_DIRECTORY)
 
 function image(name, tag) { return `${name}:${tag ?? 'latest'}` }
 
+class ParamsError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ParamsError';
+  }
+}
+
 async function writeFileToDisk(data) {
   const uploadedFile = path.join(UPLOAD_DIRECTORY, `${Date.now()}-${data.filename}`)
   await fs.promises.writeFile(uploadedFile, data.file)
@@ -70,7 +77,7 @@ const paramRegex = /^[a-zA-Z_][a-zA-Z0-9_]*=.+$/
 const isValidParam = (param) => paramRegex.test(param)
 function validateParams(params) {
   for (const param of params) {
-    if (!isValidParam(param)) throw new Error(`Invalid param format: ${param}`)
+    if (!isValidParam(param)) throw new ParamsError(`Invalid param format: ${param}`)
   }
 }
 
@@ -108,7 +115,7 @@ async function routes(fastify, _options) {
         const work_id = data.fields.work_id.value
         const assignment_id = data.fields.assignment_id.value
         const callback = data.fields.callback.value
-        const params = data.fields.param.map(param => param.value)
+        const params = data.fields.param?.map(param => param.value) || []
 
         validateParams(params)
 
@@ -139,9 +146,17 @@ async function routes(fastify, _options) {
         }
       } catch (e) {
         logger.error('Error grading work:' + JSON.stringify(e.message))
+        let message = 'Error grading work'
+
+        // We show the error message when it is a ParamsError, because is something
+        // that the caller can fix
+        if (e instanceof ParamsError) {
+          message = e.message
+        }
+
         return {
           success: false,
-          message: 'Error grading work'
+          message
         }
       }
     }
