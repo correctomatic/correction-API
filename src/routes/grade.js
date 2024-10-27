@@ -81,6 +81,15 @@ function validateParams(params) {
   }
 }
 
+function extractParams(fields) {
+  const param = fields.param
+  if (!param) return []
+
+  // When there is a single param it's a field, when there are multiple it's an array of fields
+  const paramsArray = Array.isArray(param) ? param : [param];
+  return paramsArray.map(param => param.value)
+}
+
 async function routes(fastify, _options) {
 
   // This API enqueues the result
@@ -115,7 +124,7 @@ async function routes(fastify, _options) {
         const work_id = data.fields.work_id.value
         const assignment_id = data.fields.assignment_id.value
         const callback = data.fields.callback.value
-        const params = data.fields.param?.map(param => param.value) || []
+        const params = extractParams(data.fields)
 
         validateParams(params)
 
