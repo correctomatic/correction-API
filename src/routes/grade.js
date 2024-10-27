@@ -9,7 +9,7 @@ import logger from '../logger.js'
 import { ensureDirectoryExists } from '../lib/utils.js'
 import { putInPendingQueue } from '../lib/bullmq.js'
 
-const UPLOAD_DIRECTORY =  env.UPLOAD_DIRECTORY
+const UPLOAD_DIRECTORY = env.UPLOAD_DIRECTORY
 
 
 // Module initialization
@@ -17,8 +17,15 @@ ensureDirectoryExists(UPLOAD_DIRECTORY)
 
 function image(name, tag) { return `${name}:${tag ?? 'latest'}` }
 
+class ParamsError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ParamsError';
+  }
+}
+
 async function writeFileToDisk(data) {
-  const uploadedFile = path.join(UPLOAD_DIRECTORY,`${Date.now()}-${data.filename}`)
+  const uploadedFile = path.join(UPLOAD_DIRECTORY, `${Date.now()}-${data.filename}`)
   await fs.promises.writeFile(uploadedFile, data.file)
   return uploadedFile
 }
@@ -54,7 +61,7 @@ function checkFields(_req, reply, fields) {
 async function preValidateGrade(req, reply) {
   try {
     const data = await req.file()
-    if(!checkFile(req, reply, data)) return
+    if (!checkFile(req, reply, data)) return
     req.fileData = data
     // We can't validate the fields here because the file must be read first
   } catch (_error) {
@@ -63,6 +70,24 @@ async function preValidateGrade(req, reply) {
       message: 'Invalid file data',
     })
   }
+}
+
+// Params must be in the format VAR_NAME=something
+const paramRegex = /^[a-zA-Z_][a-zA-Z0-9_]*=.+$/
+const isValidParam = (param) => paramRegex.test(param)
+function validateParams(params) {
+  for (const param of params) {
+    if (!isValidParam(param)) throw new ParamsError(`Invalid param format: ${param}`)
+  }
+}
+
+function extractParams(fields) {
+  const param = fields.param
+  if (!param) return []
+
+  // When there is a single param it's a field, when there are multiple it's an array of fields
+  const paramsArray = Array.isArray(param) ? param : [param];
+  return paramsArray.map(param => param.value)
 }
 
 async function routes(fastify, _options) {
@@ -74,6 +99,7 @@ async function routes(fastify, _options) {
   // - assignment_id: assignment id of the exercise. This is for computing the docker image for the correction
   // - file: file with the exercise
   // - callback: URL to call with the results
+  // - params: list of parameters to pass to the correction script
 
   // Returns:
   // - success: boolean
@@ -91,43 +117,55 @@ async function routes(fastify, _options) {
 
         logger.debug('Received file for grading')
         const uploadedFile = await writeFileToDisk(data)
-        logger.debug('File saved to disk:'+ uploadedFile)
+        logger.debug('File saved to disk:' + uploadedFile)
 
         // This MUST be after reading the file
-        if(!checkFields(req, reply, data.fields)) return
+        if (!checkFields(req, reply, data.fields)) return
         const work_id = data.fields.work_id.value
         const assignment_id = data.fields.assignment_id.value
         const callback = data.fields.callback.value
+        const params = extractParams(data.fields)
 
-        logger.debug(`Job data: work_id=${work_id}, assignment_id=${assignment_id}, callback=${callback}`)
+        validateParams(params)
+
+        logger.debug(`Job data: work_id=${work_id}, assignment_id=${assignment_id}, callback=${callback}, params=${JSON.stringify(params)}`)
 
         // TODO: need a list of exercises / images
         // At the moment we use assignment_id, but this is a security risk
         // const containerImage = image('correction-test-1')
         const containerImage = image(assignment_id)
-        logger.debug('Container image for grading:'+ containerImage)
+        logger.debug('Container image for grading:' + containerImage)
 
         // Put the mensage in the queue
         const message = {
           work_id,
           image: containerImage,
           file: uploadedFile,
-          callback
+          callback,
+          params
         }
 
-        logger.debug('Enqueuing work for grading:'+ JSON.stringify(message))
+        logger.debug('Enqueuing work for grading:' + JSON.stringify(message))
         await putInPendingQueue(message)
-        logger.info('Work enqueued for grading:'+ JSON.stringify(message))
+        logger.info('Work enqueued for grading:' + JSON.stringify(message))
 
         return {
           success: true,
           message: 'Work enqueued for grading'
         }
-      }catch(e) {
-        logger.error('Error grading work:'+ JSON.stringify(e.message))
+      } catch (e) {
+        logger.error('Error grading work:' + JSON.stringify(e.message))
+        let message = 'Error grading work'
+
+        // We show the error message when it is a ParamsError, because is something
+        // that the caller can fix
+        if (e instanceof ParamsError) {
+          message = e.message
+        }
+
         return {
           success: false,
-          message: 'Error grading work'
+          message
         }
       }
     }

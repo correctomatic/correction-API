@@ -40,10 +40,11 @@ This is the maint endpoint, used to enqueue a correction. The correction will be
 It expects the input as a multipart form and will return the data in JSON format.
 
 Expected parameters:
-- **work_id**: caller's id of the exercise
-- **assignment_id**: assignment id of the exercise. This is for computing the docker image for the correction.
+- **work_id**: Caller's id of the exercise
+- **assignment_id**: Assignment id of the exercise. This is for computing the docker image for the correction.
   - TO-DO: currently it will use the assignment_id as the image, but this is a security risk.
-- **file**: file with the exercise
+- **param**: You can include as many fields name `param` with the params that will be passed to the container as environment variables. The content of each field must have the format `ENV_VAR_NAME=VALUE`, being `ENV_VAR_NAME` a valid environment variable name and `VALUE` the value to assign to it.
+- **file**: File with the exercise
 - **callback**: URL to call with the results
 
 Return value:
@@ -70,6 +71,9 @@ curl --request POST \
   --form file=@$FILE \
   --form work_id=$WORK_ID \
   --form assignment_id=$ASSIGNMENT_ID \
+  --form param="EXERCISE=exercise 6" \
+  --form param="LANGUAGE=javascript"
+  --form param=tututu=lalala
   --form callback=http://localhost:9000
 ```
 

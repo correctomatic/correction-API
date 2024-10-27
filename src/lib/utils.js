@@ -1,6 +1,13 @@
 import fs from 'fs'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-const ensureDirectoryExists = async (directory) => {
+function scriptDir(meta) {
+  const filename = fileURLToPath(meta.url);
+  return dirname(filename);
+}
+
+async function ensureDirectoryExists(directory) {
   try {
     await fs.promises.access(directory);
   } catch (error) {
@@ -13,5 +20,6 @@ const ensureDirectoryExists = async (directory) => {
 }
 
 export {
-  ensureDirectoryExists
+  ensureDirectoryExists,
+  scriptDir
 }

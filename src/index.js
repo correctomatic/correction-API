@@ -10,6 +10,7 @@ import multipart from '@fastify/multipart'
 import { swaggerOptions, swaggerUiOptions } from './swagger.js'
 
 import logger from './logger.js'
+import { scriptDir } from './lib/utils.js'
 
 const PORT = env.PORT
 
@@ -24,8 +25,9 @@ fastify.register(multipart)
 
 // Run the server!
 try {
+  const currentDir = scriptDir(import.meta)
   fastify.register(AutoLoad, {
-    dir: join(import.meta.dirname, 'routes'),
+    dir: join(currentDir, 'routes'),
   })
 
   fastify.listen({ port: PORT, host: '0.0.0.0' })
