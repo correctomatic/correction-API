@@ -1,11 +1,11 @@
-import pino from 'pino'
+import pino, { TransportTargetOptions } from 'pino'
 import env from './config/env.js'
 
-const environment = env.ENVIRONMENT
-const logLevel = env.log.LOG_LEVEL
-const logFile = env.log.LOG_FILE
+const environment: string = env.ENVIRONMENT
+const logLevel: string = env.log.LOG_LEVEL
+const logFile: string = env.log.LOG_FILE
 
-let targets = []
+let targets: TransportTargetOptions[] = []
 if (environment === 'development') {
   targets = [
     {
@@ -30,8 +30,11 @@ const transport = pino.transport({
   targets
 })
 
-const logger = pino({
-  level: logLevel,
-},transport)
+const logger = pino(
+  {
+    level: logLevel,
+  },
+  transport
+)
 
 export default logger

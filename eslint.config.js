@@ -12,7 +12,7 @@ export default [
         ...globals.node
       },
     },
-    ignores: ["**/dist/*"],
+    ignores: ["**/dist/**"],
     linterOptions: {
       noInlineConfig: false,
       reportUnusedDisableDirectives: true,
