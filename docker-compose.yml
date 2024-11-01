@@ -17,14 +17,22 @@ services:
   #     - /app/venv
   #   command: flask run --host=0.0.0.0 --port=5000
 
+  redis:
+    image: redis:7
+    # Sets the password for the redis server and
+    # enables the appendonly mode
+    command: bash -c "redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}"
+    ports:
+      - "6379:6379"
+
   db:
     image: postgres:16.3
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: correctomatic
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./postgres-data:/docker-entrypoint-initdb.d/

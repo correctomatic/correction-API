@@ -10,6 +10,7 @@ import multipart from '@fastify/multipart'
 import { swaggerOptions, swaggerUiOptions } from './swagger.js'
 
 import logger from './logger.js'
+import dbConnector from './db/sequelize.js'
 import { scriptDir } from './lib/utils.js'
 
 const PORT = env.PORT
@@ -25,6 +26,18 @@ fastify.register(multipart)
 
 // Run the server!
 try {
+  const dbOpts = {
+    // database: 'memory:',
+    // dialect: 'sqlite',
+    dialect: 'postgres',
+    host: env.db.host,
+    database: env.db.database,
+    username: env.db.username,
+    password: env.db.password,
+    logging: (msg) => logger.info(msg)
+  }
+  fastify.register(dbConnector, dbOpts)
+
   const currentDir = scriptDir(import.meta)
   fastify.register(AutoLoad, {
     dir: join(currentDir, 'routes'),

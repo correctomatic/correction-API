@@ -20,7 +20,10 @@
     "bullmq": "^5.7.8",
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
-    "pino": "^8.20.0"
+    "pg": "^8.13.1",
+    "pino": "^8.20.0",
+    "sequelize": "^6.37.5",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.2.0",
