@@ -1,17 +1,16 @@
-import env from './config/env.js'
-import { join } from 'node:path'
+const env = require('./config/env')
+const { join } = require('path')
 
-import Fastify from 'fastify'
-import AutoLoad from '@fastify/autoload'
-import fastifyCors from '@fastify/cors'
-import fastifySwagger from "@fastify/swagger"
-import fastifySwaggerUi from "@fastify/swagger-ui"
-import multipart from '@fastify/multipart'
-import { swaggerOptions, swaggerUiOptions } from './swagger.js'
+const Fastify = require('fastify')
+const AutoLoad = require('@fastify/autoload')
+const fastifyCors = require('@fastify/cors')
+const fastifySwagger = require('@fastify/swagger')
+const fastifySwaggerUi = require('@fastify/swagger-ui')
+const multipart = require('@fastify/multipart')
+const { swaggerOptions, swaggerUiOptions } = require('./swagger')
 
-import logger from './logger.js'
-import dbConnector from './db/sequelize.js'
-import { scriptDir } from './lib/utils.js'
+const logger = require('./logger')
+// const dbConnector = require('./db/sequelize')
 
 const PORT = env.PORT
 
@@ -36,11 +35,10 @@ try {
     password: env.db.password,
     logging: (msg) => logger.info(msg)
   }
-  fastify.register(dbConnector, dbOpts)
+  // fastify.register(dbConnector, dbOpts)
 
-  const currentDir = scriptDir(import.meta)
   fastify.register(AutoLoad, {
-    dir: join(currentDir, 'routes'),
+    dir: join(__dirname, 'routes'),
   })
 
   fastify.listen({ port: PORT, host: '0.0.0.0' })

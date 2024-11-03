@@ -1,4 +1,4 @@
-import dotenv from 'dotenv'
+const dotenv = require('dotenv')
 dotenv.config()
 
 const DEFAULT_PORT = 3000
@@ -25,7 +25,7 @@ const redisConfig = {
   password: process.env.REDIS_PASSWORD || REDIS_DEFAULTS.password,
 }
 
-export default {
+module.exports = {
   ENVIRONMENT: process.env.NODE_ENV || DEFAULT_ENVIRONMENT,
   PORT: process.env.PORT || DEFAULT_PORT,
 

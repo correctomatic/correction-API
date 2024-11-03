@@ -1,6 +1,6 @@
-import { Queue } from 'bullmq'
-import env from '../config/env.js'
-import logger from '../logger.js'
+const { Queue } = require('bullmq')
+const env = require('../config/env')
+const logger = require('../logger')
 
 const { QUEUE_NAME, QUEUE_CONFIG } = env.bullMQ
 const queue = new Queue(QUEUE_NAME,QUEUE_CONFIG)
@@ -11,6 +11,6 @@ async function putInPendingQueue(job) {
   return queue.add(name, job)
 }
 
-export {
+module.exports = {
   putInPendingQueue
 }

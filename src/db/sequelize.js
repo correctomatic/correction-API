@@ -1,10 +1,13 @@
-import fp from 'fastify-plugin'
-import { Sequelize } from 'sequelize'
 import fs from 'fs'
 import path from 'path'
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'url'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import fp from 'fastify-plugin'
+import { Sequelize } from 'sequelize'
+
+import * as models from './models/index.js' // Import all models as an object
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 async function readModels(sequelize) {
 
@@ -18,6 +21,15 @@ async function readModels(sequelize) {
       model(sequelize, Sequelize.DataTypes) // Inicializa el modelo con Sequelize
     })
   )
+
+
+  // Loop through all exports in models/index.js
+  Object.values(models).forEach((model) => {
+    // Initialize model with Sequelize if it has an init function
+    if (typeof model.init === 'function') {
+      model.init(sequelize)
+    }
+  })
 
   // Relaciona los modelos si es necesario
   Object.values(sequelize.models).forEach((model) => {
@@ -44,6 +56,7 @@ async function dbConnector(fastify, options) {
 
   await readModels(sequelize)
 
+  fastify.decorate('Sequelize', Sequelize)
   fastify.decorate('sequelize', sequelize)
 
   fastify.addHook('onClose', async (_instance, done) => {

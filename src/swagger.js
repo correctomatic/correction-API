@@ -37,7 +37,7 @@ const swaggerUiOptions = {
   },
 }
 
-export {
+module.exports = {
   swaggerOptions,
   swaggerUiOptions
 }

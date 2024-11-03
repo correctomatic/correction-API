@@ -1,13 +1,13 @@
-import fs from 'fs'
-import path from 'path'
-import env from '../config/env.js'
+const fs = require('fs')
+const path = require('path')
+const env = require('../config/env')
 
-import logger from '../logger.js'
+const logger = require('../logger')
 // TO-DO: Schemas are not working for multipart forms
-// import { GRADE_SCHEMA } from '../schemas/grade_schemas.js'
+// const { GRADE_SCHEMA } = require('../schemas/grade_schemas')
 
-import { ensureDirectoryExists } from '../lib/utils.js'
-import { putInPendingQueue } from '../lib/bullmq.js'
+const { ensureDirectoryExists } = require('../lib/utils')
+const { putInPendingQueue } = require('../lib/bullmq')
 
 const UPLOAD_DIRECTORY = env.UPLOAD_DIRECTORY
 
@@ -19,8 +19,8 @@ function image(name, tag) { return `${name}:${tag ?? 'latest'}` }
 
 class ParamsError extends Error {
   constructor(message) {
-    super(message);
-    this.name = 'ParamsError';
+    super(message)
+    this.name = 'ParamsError'
   }
 }
 
@@ -86,7 +86,7 @@ function extractParams(fields) {
   if (!param) return []
 
   // When there is a single param it's a field, when there are multiple it's an array of fields
-  const paramsArray = Array.isArray(param) ? param : [param];
+  const paramsArray = Array.isArray(param) ? param : [param]
   return paramsArray.map(param => param.value)
 }
 
@@ -172,7 +172,7 @@ async function routes(fastify, _options) {
   )
 }
 
-export default routes
+module.exports = routes
 
 
 
