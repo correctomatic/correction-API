@@ -17,6 +17,7 @@
     "@fastify/multipart": "^8.2.0",
     "@fastify/swagger": "^8.14.0",
     "@fastify/swagger-ui": "^3.0.0",
+    "bcrypt": "^5.1.1",
     "bullmq": "^5.7.8",
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
