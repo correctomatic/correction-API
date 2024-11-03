@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
 
   class Assignment extends Model {
     static associate(models) {
-      Assignment.belongsTo(models.User, { foreignKey: 'user', as: 'user' })
+      // Assignment.belongsTo(models.User, { foreignKey: 'user', as: 'user' })
+      Assignment.belongsTo(models.User, { foreignKey: 'user' })
     }
   }
 
@@ -15,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       references: {
-        model: 'User', // References User model
-        key: 'id',
+        model: 'User',
+        key: 'user',
       }
     },
     assignment: {
@@ -32,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     indexes: [
       {
         unique: true,
-        fields: ['userId','id']
+        fields: ['userId','assignment']
       }
     ]
   })

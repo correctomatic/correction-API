@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
 
   class User extends Model {
     static associate(models) {
-      User.hasMany(models.Assignment, { foreignKey: 'userId', as: 'assignments' })
+      User.hasMany(models.Assignment, { foreignKey: 'user', as: 'assignments' })
     }
 
     async validatePassword(password) {

@@ -44,6 +44,7 @@ function initSequelize(extraConfig) {
     }
   })
 
+  db.models = sequelize.models
   db.sequelize = sequelize
   db.Sequelize = Sequelize
 
