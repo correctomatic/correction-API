@@ -10,7 +10,7 @@ const multipart = require('@fastify/multipart')
 const { swaggerOptions, swaggerUiOptions } = require('./swagger')
 
 const logger = require('./logger')
-// const dbConnector = require('./db/sequelize')
+const dbConnector = require('./plugins/sequelize')
 
 const PORT = env.PORT
 
@@ -25,17 +25,7 @@ fastify.register(multipart)
 
 // Run the server!
 try {
-  const dbOpts = {
-    // database: 'memory:',
-    // dialect: 'sqlite',
-    dialect: 'postgres',
-    host: env.db.host,
-    database: env.db.database,
-    username: env.db.username,
-    password: env.db.password,
-    logging: (msg) => logger.info(msg)
-  }
-  // fastify.register(dbConnector, dbOpts)
+  fastify.register(dbConnector, { logging: (msg) => logger.info(msg) })
 
   fastify.register(AutoLoad, {
     dir: join(__dirname, 'routes'),
