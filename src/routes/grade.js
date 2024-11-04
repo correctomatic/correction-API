@@ -1,36 +1,17 @@
-const fs = require('fs')
-const path = require('path')
-
 const env = require('../config/env')
 const logger = require('../logger')
 // TO-DO: Schemas are not working for multipart forms
 // const { GRADE_SCHEMA } = require('../schemas/grade_schemas')
 
-const { ensureDirectoryExists } = require('../lib/utils')
-const { putInPendingQueue } = require('../lib/bullmq')
-
 const authenticate = require('../middleware/authenticate')
+
+const { ensureDirectoryExists, writeSubmissionToDisk } = require('../lib/utils')
+const { createCorrectionJob, ParamsError } = require('../lib/correctomatic')
 
 const UPLOAD_DIRECTORY = env.UPLOAD_DIRECTORY
 
-
 // Module initialization
 ensureDirectoryExists(UPLOAD_DIRECTORY)
-
-function image(name, tag) { return `${name}:${tag ?? 'latest'}` }
-
-class ParamsError extends Error {
-  constructor(message) {
-    super(message)
-    this.name = 'ParamsError'
-  }
-}
-
-async function writeFileToDisk(data) {
-  const uploadedFile = path.join(UPLOAD_DIRECTORY, `${Date.now()}-${data.filename}`)
-  await fs.promises.writeFile(uploadedFile, data.file)
-  return uploadedFile
-}
 
 function checkFile(_req, reply, data) {
   if (!data) {
@@ -74,15 +55,6 @@ async function preValidateGrade(req, reply) {
   }
 }
 
-// Params must be in the format VAR_NAME=something
-const paramRegex = /^[a-zA-Z_][a-zA-Z0-9_]*=.+$/
-const isValidParam = (param) => paramRegex.test(param)
-function validateParams(params) {
-  for (const param of params) {
-    if (!isValidParam(param)) throw new ParamsError(`Invalid param format: ${param}`)
-  }
-}
-
 function extractParams(fields) {
   const param = fields.param
   if (!param) return []
@@ -121,7 +93,7 @@ async function routes(fastify, _options) {
         const data = req.fileData
 
         logger.debug('Received file for grading')
-        const uploadedFile = await writeFileToDisk(data)
+        const uploadedFile = await writeSubmissionToDisk(UPLOAD_DIRECTORY, data)
         logger.debug('File saved to disk:' + uploadedFile)
 
         // This MUST be after reading the file
@@ -131,28 +103,15 @@ async function routes(fastify, _options) {
         const callback = data.fields.callback.value
         const params = extractParams(data.fields)
 
-        validateParams(params)
-
         logger.debug(`Job data: work_id=${work_id}, assignment_id=${assignment_id}, callback=${callback}, params=${JSON.stringify(params)}`)
 
-        // TODO: need a list of exercises / images
-        // At the moment we use assignment_id, but this is a security risk
-        // const containerImage = image('correction-test-1')
-        const containerImage = image(assignment_id)
-        logger.debug('Container image for grading:' + containerImage)
-
-        // Put the mensage in the queue
-        const message = {
+        await createCorrectionJob(
           work_id,
-          image: containerImage,
-          file: uploadedFile,
+          assignment_id,
+          uploadedFile,
           callback,
           params
-        }
-
-        logger.debug('Enqueuing work for grading:' + JSON.stringify(message))
-        await putInPendingQueue(message)
-        logger.info('Work enqueued for grading:' + JSON.stringify(message))
+        )
 
         return {
           success: true,

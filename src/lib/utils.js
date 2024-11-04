@@ -1,4 +1,8 @@
 const fs = require('fs')
+const path = require('path')
+const env = require('../config/env')
+
+
 
 async function ensureDirectoryExists(directory) {
   try {
@@ -12,6 +16,13 @@ async function ensureDirectoryExists(directory) {
   }
 }
 
+async function writeSubmissionToDisk(directory, data) {
+  const uploadedFile = path.join(directory, `${Date.now()}-${data.filename}`)
+  await fs.promises.writeFile(uploadedFile, data.file)
+  return uploadedFile
+}
+
 module.exports = {
-  ensureDirectoryExists
+  ensureDirectoryExists,
+  writeSubmissionToDisk
 }
