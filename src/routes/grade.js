@@ -1,13 +1,15 @@
 const fs = require('fs')
 const path = require('path')
-const env = require('../config/env')
 
+const env = require('../config/env')
 const logger = require('../logger')
 // TO-DO: Schemas are not working for multipart forms
 // const { GRADE_SCHEMA } = require('../schemas/grade_schemas')
 
 const { ensureDirectoryExists } = require('../lib/utils')
 const { putInPendingQueue } = require('../lib/bullmq')
+
+const authenticate = require('../middleware/authenticate')
 
 const UPLOAD_DIRECTORY = env.UPLOAD_DIRECTORY
 
@@ -109,7 +111,10 @@ async function routes(fastify, _options) {
     '/grade',
     // TO-DO: this generates "body must be object" error
     // { schema: GRADE_SCHEMA },
-    { preValidation: preValidateGrade },
+    {
+      preHandler: authenticate,
+      preValidation: preValidateGrade
+    },
     async (req, reply) => {
 
       try {
