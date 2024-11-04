@@ -1,30 +1,32 @@
 'use strict'
 
-const bcrypt = require('bcrypt')
-const parseCSV = require('./read_csv')
+const path = require('path')
+const parseCSV = require('./lib/read_csv')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
     // Load data from CSV file
-    const usersData = await parseCSV('assignments.csv')
+    const assignmentsData = await parseCSV(path.resolve(__dirname,'./data/assignments.csv'))
 
     // Transform data as needed (e.g., hashing passwords for user data)
-    const users = await Promise.all(usersData.map(async (row) => ({
+    const assignments = await Promise.all(assignmentsData.map(async (row) => ({
       userId: row.userId,
       assignment: row.assignment,
       image: row.image,
-      params: row.params ? row.params.split(';') : [],
-      user_params: row.user_params || [],
+      params: row.params ? row.params.split(';') : null,
+      user_params: row.user_params || null,
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date()
     })))
 
+    console.log(assignments)
+
     // Bulk insert transformed data into the database
-    await queryInterface.bulkInsert('Users', users, {})
+    await queryInterface.bulkInsert('Assignments', assignments, {})
   },
 
   async down(queryInterface) {
-    await queryInterface.bulkDelete('Users', null, {})
+    await queryInterface.bulkDelete('Assignments', null, {})
   }
 }

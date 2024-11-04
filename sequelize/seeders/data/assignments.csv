@@ -1,0 +1,4 @@
+userId,assignment,image,params,user_params
+foo,exercise1,registry.correctomatic.org/correction-test-1
+foo,exercise2,registry.correctomatic.org/correction-test-1
+bar,exercise1,registry.correctomatic.org/correction-test-1

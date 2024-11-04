@@ -1,2 +1,4 @@
 user,password,roles
 admin,admin,admin;otherrole
+foo,bar
+bar,tee,admin

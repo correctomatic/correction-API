@@ -17,6 +17,8 @@ npx sequelize-cli seed:generate --name demo-user
 npx sequelize-cli db:seed:undo --seed name-of-seed-as-in-data
 npx sequelize-cli db:seed:undo:all
 
+ DEBUG=sequelize:* npx sequelize-cli db:seed:all --config sequelize/config.js
+
 ## Plugins
 
 Example
