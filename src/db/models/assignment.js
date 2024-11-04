@@ -5,8 +5,7 @@ module.exports = (sequelize, DataTypes) => {
 
   class Assignment extends Model {
     static associate(models) {
-      // Assignment.belongsTo(models.User, { foreignKey: 'user', as: 'user' })
-      Assignment.belongsTo(models.User, { foreignKey: 'user' })
+      Assignment.belongsTo(models.User, { foreignKey: 'userId', as: 'user' })
     }
   }
 
@@ -14,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   Assignment.init({
     userId: {
       type: DataTypes.STRING,
-      allowNull: false,
+      primaryKey: true,
       references: {
         model: 'User',
         key: 'user',
@@ -25,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     image: DataTypes.STRING,
-    params: DataTypes.JSON
+    params: DataTypes.JSON,
+    user_params: DataTypes.ARRAY(DataTypes.STRING),
   }, {
     sequelize,
     modelName: 'Assignment',

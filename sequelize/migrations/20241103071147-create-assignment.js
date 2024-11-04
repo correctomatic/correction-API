@@ -3,31 +3,31 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Assignments', {
-      user: {
+      userId: {
         type: Sequelize.STRING,
         references: {
-          model: 'Users',  // References the Users table
-          key: 'user',       // References the id column in Users table
+          model: 'Users',
+          key: 'user',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
-        // primaryKey: true,
         allowNull: false,
       },
       assignment: {
         allowNull: false,
-        // primaryKey: true,
         type: Sequelize.STRING
       },
       image: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       params: {
+        allowNull: true,
         type: Sequelize.JSON
       },
       user_params: {
-        type: Sequelize.ARRAY(Sequelize.STRING), // Add the array of strings here
         allowNull: true,
+        type: Sequelize.ARRAY(Sequelize.STRING), // Add the array of strings here
       },
       createdAt: {
         allowNull: false,
@@ -40,7 +40,7 @@ module.exports = {
     })
 
     await queryInterface.addConstraint('Assignments', {
-      fields: ['user', 'assignment'],
+      fields: ['userId', 'assignment'],
       type: 'primary key',
       name: 'pk_user_assignment'
     })
