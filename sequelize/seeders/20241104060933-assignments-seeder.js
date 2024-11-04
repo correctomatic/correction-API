@@ -11,7 +11,7 @@ module.exports = {
 
     // Transform data as needed (e.g., hashing passwords for user data)
     const assignments = await Promise.all(assignmentsData.map(async (row) => ({
-      userId: row.userId,
+      user: row.user,
       assignment: row.assignment,
       image: row.image,
       params: row.params ? row.params.split(';') : null,
@@ -19,8 +19,6 @@ module.exports = {
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date()
     })))
-
-    console.log(assignments)
 
     // Bulk insert transformed data into the database
     await queryInterface.bulkInsert('Assignments', assignments, {})

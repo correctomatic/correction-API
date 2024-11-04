@@ -5,13 +5,13 @@ module.exports = (sequelize, DataTypes) => {
 
   class Assignment extends Model {
     static associate(models) {
-      Assignment.belongsTo(models.User, { foreignKey: 'userId', as: 'user' })
+      Assignment.belongsTo(models.User, { foreignKey: 'user', as: 'owner' })
     }
   }
 
   // Assignment has a composite primary key of userId and assignmentId
   Assignment.init({
-    userId: {
+    user: {
       type: DataTypes.STRING,
       primaryKey: true,
       references: {

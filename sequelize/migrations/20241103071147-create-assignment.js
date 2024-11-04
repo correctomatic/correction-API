@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Assignments', {
-      userId: {
+      user: {
         type: Sequelize.STRING,
         references: {
           model: 'Users',
@@ -40,7 +40,7 @@ module.exports = {
     })
 
     await queryInterface.addConstraint('Assignments', {
-      fields: ['userId', 'assignment'],
+      fields: ['user', 'assignment'],
       type: 'primary key',
       name: 'pk_user_assignment'
     })
