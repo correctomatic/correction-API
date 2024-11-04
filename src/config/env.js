@@ -48,5 +48,10 @@ module.exports = {
     password: process.env.DB_PASSWORD,
   },
 
-  UPLOAD_DIRECTORY: process.env.UPLOAD_DIRECTORY || DEFAULT_UPLOAD_DIRECTORY
+  UPLOAD_DIRECTORY: process.env.UPLOAD_DIRECTORY || DEFAULT_UPLOAD_DIRECTORY,
+
+  jwt: {
+    secretKey: process.env.JWT_SECRET_KEY,
+    expiration: process.env.JWT_EXPIRES_IN || '1h',
+  },
 }

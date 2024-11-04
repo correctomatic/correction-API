@@ -1,7 +1,7 @@
 const dbInit = require('./src/db')
 const db = dbInit()
 
-async function main() {
+async function main1() {
 
   // Eliminar usuarios cuyo nombre comienza con "user"
   const deletedCount = await db.models.User.destroy({
@@ -39,6 +39,37 @@ async function main() {
 
 
 
+}
+
+async function accesing_owner() {
+  const foo = await db.models.User.findByPk('foo')
+  console.log(foo.toJSON())
+  const foo_exercise1 = await db.models.Assignment.findOne({
+    where: { user: 'foo', assignment: 'exercise1' } ,
+    include: ['owner']
+  })
+  console.log(foo_exercise1.toJSON())
+  const anotherFoo = foo_exercise1.owner
+  console.log(anotherFoo.toJSON())
+
+  await foo_exercise1.getOwner()
+  const anotherFoo2 = foo_exercise1.owner
+  console.log(anotherFoo2.toJSON())
+}
+
+async function accesing_assignments() {
+  const foo = await db.models.User.findByPk('foo', { include: ['assignments'] })
+  console.log(foo.toJSON())
+  const assignments = foo.assignments
+  console.log(assignments.map(a => a.toJSON()))
+}
+
+async function main() {
+  let valid
+
+  const foo = await db.models.User.findByPk('foo')
+  valid = await foo.validatePassword('bar')
+  console.log(valid)
 }
 
 console.time('main')

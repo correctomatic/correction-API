@@ -6,7 +6,6 @@ async function routes(fastify, _options) {
     '/hello',
     { schema: HELLO_SCHEMA },
     async (_request, _reply) => {
-      // console.log(request.id)
       return 'Hello, world!'
     }
   )
