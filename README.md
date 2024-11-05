@@ -33,6 +33,33 @@ The log level can also be configured for debuggin purposes. The `QUEUE_NAME` is 
 
 ## Endpoints
 
+### POST /login
+
+Login endpoint. It will return a JWT token that must be used in the Authorization header for the rest of the requests.
+
+Expected parameters:
+- **user**: Name of the user
+- **password**: Password
+
+Example request from command line:
+```sh
+curl --request POST \
+  --url http://localhost:3000/login \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "user": "user",
+  "password": "password"
+}'
+```
+
+Example of authorization header in curl:
+```sh
+curl --request <method> \
+  --url <enpoint> \
+  --header 'Authorization: Bearer eyJ...8R54jw' \
+  ...
+```
+
 ### POST /grade
 
 This is the maint endpoint, used to enqueue a correction. The correction will be processed by the different processes in the correction runner.
@@ -41,8 +68,7 @@ It expects the input as a multipart form and will return the data in JSON format
 
 Expected parameters:
 - **work_id**: Caller's id of the exercise
-- **assignment_id**: Assignment id of the exercise. This is for computing the docker image for the correction.
-  - TO-DO: currently it will use the assignment_id as the image, but this is a security risk.
+- **assignment_id**: Assignment id of the exercise, with the format `user/image`
 - **param**: You can include as many fields name `param` with the params that will be passed to the container as environment variables. The content of each field must have the format `ENV_VAR_NAME=VALUE`, being `ENV_VAR_NAME` a valid environment variable name and `VALUE` the value to assign to it.
 - **file**: File with the exercise
 - **callback**: URL to call with the results
@@ -59,9 +85,9 @@ You have the schemas in `grade_schemas.js`:
 Example request from command line:
 
 ```sh
-API_SERVER=http://localhost:8080 # This is where this project is running
+API_SERVER=http://localhost:3000 # This is where this project is running
 CALLBACK_URL=http://localhost:9000 # To receive the results
-ASSIGNMENT_ID="<id of the assigntment, currently the image name>"
+ASSIGNMENT_ID="<user>/<assignment>"
 WORK_ID=$(openssl rand -hex 4) # An internal id for this job, this is generating a random one
 FILE="<path to the exercise file>"
 

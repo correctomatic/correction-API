@@ -15,7 +15,13 @@ const dbConnector = require('./plugins/sequelize')
 const PORT = env.PORT
 
 const fastify = Fastify({
-  logger
+  logger,
+  ajv: {
+    customOptions: { allErrors: true },
+    plugins: [
+      [require('ajv-errors')]
+    ]
+  }
 })
 
 fastify.register(fastifySwagger, swaggerOptions)
