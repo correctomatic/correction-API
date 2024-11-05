@@ -47,12 +47,12 @@ curl --request POST \
   --url http://localhost:3000/login \
   --header 'Content-Type: application/json' \
   --data '{
-  "user": "user",
-  "password": "password"
+  "user": "<user>",
+  "password": "<password>"
 }'
 ```
 
-Example of authorization header in curl:
+Example of authorization header in curl for subsequent requests:
 ```sh
 curl --request <method> \
   --url <enpoint> \

@@ -1,8 +1,5 @@
 const fs = require('fs')
 const path = require('path')
-const env = require('../config/env')
-
-
 
 async function ensureDirectoryExists(directory) {
   try {

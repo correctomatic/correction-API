@@ -1,14 +1,6 @@
 const logger = require('../logger')
 const { putInPendingQueue } = require('./bullmq')
-
-class ParamsError extends Error {
-  constructor(message) {
-    super(message)
-    this.name = 'ParamsError'
-  }
-}
-
-function image(name, tag) { return `${name}:${tag ?? 'latest'}` }
+const {ParamsError} = require('./errors')
 
 // Params must be in the format VAR_NAME=something
 const paramRegex = /^[a-zA-Z_][a-zA-Z0-9_]*=.+$/
@@ -19,20 +11,13 @@ function validateParams(params) {
   }
 }
 
-async function createCorrectionJob(work_id, assignment_id, uploadedFile, callback, params) {
+async function createCorrectionJob(work_id, image, uploadedFile, callback, params) {
 
   validateParams(params)
 
-  // TODO: need a list of exercises / images
-  // At the moment we use assignment_id, but this is a security risk
-  // const containerImage = image('correction-test-1')
-  const containerImage = image(assignment_id)
-  logger.debug('Container image for grading:' + containerImage)
-
-  // Put the mensage in the queue
   const message = {
     work_id,
-    image: containerImage,
+    image,
     file: uploadedFile,
     callback,
     params
