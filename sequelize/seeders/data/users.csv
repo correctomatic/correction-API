@@ -1,4 +1,5 @@
 user,password,roles
 admin,admin,admin;otherrole
+pagination,pagination
 foo,bar
 bar,tee,admin

@@ -39,10 +39,10 @@ try {
   })
 
   // Uncomment this to print the routes to the console
-  fastify.ready(err => {
-    if (err) throw err
-    console.log(fastify.printRoutes())
-  })
+  // fastify.ready(err => {
+  //   if (err) throw err
+  //   console.log(fastify.printRoutes())
+  // })
 
   fastify.listen({ port: PORT, host: '0.0.0.0' })
 
