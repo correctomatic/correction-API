@@ -27,3 +27,6 @@ https://github.com/taythebot/fastify-template.git
 Tutorial, very good
 https://www.nearform.com/insights/complete-guide-fastify-plugin-system/
 
+
+
+https://github.com/pundit-community/pundit.js

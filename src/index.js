@@ -33,8 +33,15 @@ fastify.register(multipart)
 try {
   fastify.register(dbConnector, { logging: (msg) => logger.info(msg) })
 
+  // Routes MUST be loaded after the dbConnector plugin
   fastify.register(AutoLoad, {
     dir: join(__dirname, 'routes'),
+  })
+
+  // Uncomment this to print the routes to the console
+  fastify.ready(err => {
+    if (err) throw err
+    console.log(fastify.printRoutes())
   })
 
   fastify.listen({ port: PORT, host: '0.0.0.0' })
