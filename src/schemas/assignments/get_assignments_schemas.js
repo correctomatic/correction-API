@@ -1,4 +1,32 @@
-// src/schemas/assignmentSchemas.js
+const ASSIGNMENT_SCHEMA = {
+  type: 'object',
+  properties: {
+    user: { type: 'string' },
+    assignment: { type: 'string' },
+    params: { type: 'object' },
+    user_params: { type: 'array', items: { type: 'string' } }
+  },
+  required: ['user', 'assignment']  // include required assignment fields
+}
+
+const ERROR_RESPONSE_SCHEMA = {
+  type: 'object',
+  required: ['success', 'message'],
+  properties: {
+    success: { "enum": [ false ] },
+    message: { type: 'string' }
+  }
+}
+
+const GET_ASSIGNMENT_SCHEMA = {
+  summary: "Get a specific assignment",
+  description: "Retrieves details for a single assignment.",
+  response: {
+    200: ASSIGNMENT_SCHEMA,
+    400: ERROR_RESPONSE_SCHEMA,
+    500: ERROR_RESPONSE_SCHEMA
+  }
+}
 
 const GET_ASSIGNMENTS_REQUEST_SCHEMA = {
   type: 'object',
@@ -11,27 +39,10 @@ const GET_ASSIGNMENTS_REQUEST_SCHEMA = {
   additionalProperties: true
 }
 
-const GET_ASSIGNMENTS_SUCCESS_RESPONSE_SCHEMA = {
-  type: 'array',
-  items: {
-    type: 'object',
-    properties: {
-      user: { type: 'string' },
-      assignment: { type: 'string' },
-      params: { type: 'object' },
-      user_params: { type: 'array', items: { type: 'string' } }
-    },
-    required: ['user', 'assignment']  // include required assignment fields
-  }
-}
 
-const GET_ASSIGNMENTS_ERROR_RESPONSE_SCHEMA = {
-  type: 'object',
-  required: ['success', 'message'],
-  properties: {
-    success: { "enum": [ false ] },
-    message: { type: 'string' }
-  }
+const GET_ASSIGNMENTS_RESPONSE_SCHEMA = {
+  type: 'array',
+  items: ASSIGNMENT_SCHEMA
 }
 
 const GET_ASSIGNMENTS_SCHEMA = {
@@ -39,12 +50,14 @@ const GET_ASSIGNMENTS_SCHEMA = {
   description: "Retrieves a list of assignments with optional pagination.",
   querystring: GET_ASSIGNMENTS_REQUEST_SCHEMA,
   response: {
-    200: GET_ASSIGNMENTS_SUCCESS_RESPONSE_SCHEMA,
-    400: GET_ASSIGNMENTS_ERROR_RESPONSE_SCHEMA,
-    500: GET_ASSIGNMENTS_ERROR_RESPONSE_SCHEMA
+    200: GET_ASSIGNMENTS_RESPONSE_SCHEMA,
+    400: ERROR_RESPONSE_SCHEMA,
+    500: ERROR_RESPONSE_SCHEMA
   }
 }
 
+
 module.exports = {
+  GET_ASSIGNMENT_SCHEMA,
   GET_ASSIGNMENTS_SCHEMA
 }
