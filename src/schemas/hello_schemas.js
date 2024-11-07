@@ -19,6 +19,7 @@ const HELLO_QUERY_STRING = {
 }
 
 const HELLO_SCHEMA = {
+  tags: ["Miscellaneous"],
   summary: "Returns a greeting",
   description: "\
 **This endpoint is intended for debugging purposes**. \n \

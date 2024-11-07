@@ -69,7 +69,7 @@ It expects the input as a multipart form and will return the data in JSON format
 Expected parameters:
 - **work_id**: Caller's id of the exercise
 - **assignment_id**: Assignment id of the exercise, with the format `user/image`
-- **param**: You can include as many fields name `param` with the params that will be passed to the container as environment variables. The content of each field must have the format `ENV_VAR_NAME=VALUE`, being `ENV_VAR_NAME` a valid environment variable name and `VALUE` the value to assign to it.
+- **param**: You can include as many fields named `param` with the params that will be passed to the container as environment variables. The content of each field must have the format `ENV_VAR_NAME=VALUE`, being `ENV_VAR_NAME` a valid environment variable name and `VALUE` the value to assign to it.
 - **file**: File with the exercise
 - **callback**: URL to call with the results
 

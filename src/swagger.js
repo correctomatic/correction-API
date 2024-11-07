@@ -12,6 +12,24 @@ const swaggerOptions = {
     schemes: ["http", "https"],
     consumes: ["application/json"],
     produces: ["application/json"],
+    tags: [
+      {
+        name: "Grading Operations",
+        description: "Endpoints for grading-related tasks.",
+      },
+      {
+        name: "Assignments Management",
+        description: "Endpoints for managing assignments.",
+      },
+      {
+        name: "Users Management",
+        description: "Endpoints for managing users.",
+      },
+      {
+        name: "Miscellaneous",
+        description: "Misceallaneous endpoints.",
+      },
+    ],
   },
 }
 

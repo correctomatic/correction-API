@@ -13,13 +13,16 @@ async function ensureDirectoryExists(directory) {
   }
 }
 
-async function writeSubmissionToDisk(directory, data) {
-  const uploadedFile = path.join(directory, `${Date.now()}-${data.filename}`)
-  await fs.promises.writeFile(uploadedFile, data.file)
-  return uploadedFile
+async function moveToUploadsDir(uploadsDirectory, filename) {
+  const source = filename
+  const basename = path.basename(filename)
+  const destination = path.join(uploadsDirectory, basename)
+
+  fs.promises.rename(source, destination)
+  return destination
 }
 
 module.exports = {
   ensureDirectoryExists,
-  writeSubmissionToDisk
+  moveToUploadsDir,
 }

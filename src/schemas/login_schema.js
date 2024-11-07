@@ -27,7 +27,8 @@ const LOGIN_RESPONSE_SCHEMA = {
 }
 
 const LOGIN_SCHEMA = {
-  summary: "Correction request",
+  tags: ["Users Management"],
+  summary: "User login",
   description: "\
   User sign in. The API will return a JWT bearer token that must be sent in subsequent requests\
   ",
