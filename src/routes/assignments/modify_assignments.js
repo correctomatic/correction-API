@@ -57,7 +57,7 @@ async function routes(fastify, _options) {
         return reply.status(201).send(successResponse(newAssignment))
       } catch (error) {
         const userError = sequelizeError(error)
-        if(userError === NOT_A_SEQUELIZE_ERROR) {
+        if (userError === NOT_A_SEQUELIZE_ERROR) {
           return reply.status(500).send(errorResponse('Internal server error'))
         }
         return reply.status(400).send(errorResponse(userError))
@@ -69,8 +69,7 @@ async function routes(fastify, _options) {
     '/:user/:assignment',
     { schema: UPDATE_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
-      const { user } = request.params
-      const { assignment } = request.params
+      const { user, assignment } = request.params
       const { image, params, user_params } = request.body
 
       try {
@@ -88,7 +87,7 @@ async function routes(fastify, _options) {
 
       } catch (error) {
         const userError = sequelizeError(error)
-        if(userError === NOT_A_SEQUELIZE_ERROR) {
+        if (userError === NOT_A_SEQUELIZE_ERROR) {
           return reply.status(500).send(errorResponse('Internal server error'))
         }
         return reply.status(400).send(errorResponse(userError))
@@ -100,19 +99,27 @@ async function routes(fastify, _options) {
     '/:user/:assignment',
     { schema: DELETE_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
-      const { user } = request
-      const { assignment } = request.params
+      const { user, assignment } = request.params
 
-      const theAssignment = await Assignment.findOne({
-        where: { user: user.id, assignment }
-      })
+      try {
+        const theAssignment = await Assignment.findOne({
+          where: { user, assignment }
+        })
 
-      if (!theAssignment) {
-        return reply.status(404).send(errorResponse('Assignment not found'))
+        if (!theAssignment) {
+          return reply.status(404).send(errorResponse('Assignment not found'))
+        }
+
+        await theAssignment.destroy()
+        return reply.status(204).send()
+
+      } catch (error) {
+        const userError = sequelizeError(error)
+        if (userError === NOT_A_SEQUELIZE_ERROR) {
+          return reply.status(500).send(errorResponse('Internal server error'))
+        }
+        return reply.status(400).send(errorResponse(userError))
       }
-
-      await theAssignment.destroy()
-      return reply.status(204).send()
     })
 }
 

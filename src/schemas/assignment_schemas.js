@@ -138,9 +138,9 @@ const DELETE_ASSIGNMENT_SCHEMA = {
   summary: "Delete Assignment",
   // params: DELETE_ASSIGNMENT_REQUEST_SCHEMA,
   response: {
-    200: {
+    204: {
       description: 'Successfully deleted the assignment.',
-      ...MODIFICATION_SUCCESS_RESPONSE_SCHEMA
+      type: 'null',
     },
     400: {
       description: 'Bad request, invalid input data or assignment not found.',
