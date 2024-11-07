@@ -65,6 +65,7 @@ const GET_ASSIGNMENT_SCHEMA = {
   tags: ["Assignments Management"],
   summary: "Get a specific assignment",
   description: "Retrieves details for a single assignment.",
+  security: [{ bearerAuth: [] }],
   response: {
     200: ASSIGNMENT_SCHEMA,
     400: ERROR_RESPONSE_SCHEMA,
@@ -96,6 +97,7 @@ const GET_ASSIGNMENTS_SCHEMA = {
 const CREATE_ASSIGNMENT_SCHEMA = {
   tags: ["Assignments Management"],
   summary: "Create Assignment",
+  description: "Creates a new assignment for the current user.",
   body: CREATE_ASSIGNMENT_REQUEST_SCHEMA,
   response: {
     201: {
@@ -136,7 +138,6 @@ const UPDATE_ASSIGNMENT_SCHEMA = {
 const DELETE_ASSIGNMENT_SCHEMA = {
   tags: ["Assignments Management"],
   summary: "Delete Assignment",
-  // params: DELETE_ASSIGNMENT_REQUEST_SCHEMA,
   response: {
     204: {
       description: 'Successfully deleted the assignment.',

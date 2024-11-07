@@ -25,6 +25,7 @@ const HELLO_SCHEMA = {
 **This endpoint is intended for debugging purposes**. \n \
 Always returns 'Hello, World!' . \
 ",
+  security: [],
   querystring: HELLO_QUERY_STRING,
   response: HELLO_RESPONSE
 }

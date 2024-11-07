@@ -32,6 +32,7 @@ const LOGIN_SCHEMA = {
   description: "\
   User sign in. The API will return a JWT bearer token that must be sent in subsequent requests\
   ",
+  security: [],
   body: LOGIN_REQUEST_SCHEMA,
   response: {
     200: {

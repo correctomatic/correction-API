@@ -24,11 +24,7 @@ const swaggerOptions = {
         }
       }
     },
-    security: [
-      {
-        bearerAuth: []
-      }
-    ],
+    security: [{ bearerAuth: [] }],
     tags: [
       {
         name: 'Grading Operations',
