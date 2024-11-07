@@ -24,6 +24,13 @@ function errorForUser(error) {
   return('Error creating assignment')
 }
 
+function successResponse(assignment) {
+  return {
+    success: true,
+    assignment: assignment.toJSON()
+  }
+}
+
 async function routes(fastify, _options) {
 
   const Assignment = fastify.db.sequelize.models.Assignment
@@ -46,7 +53,8 @@ async function routes(fastify, _options) {
           params,
           user_params
         })
-        return reply.status(201).send(newAssignment)
+        await newAssignment.reload()
+        return reply.status(201).send(successResponse(newAssignment))
       } catch (error) {
         const userError = errorForUser(error)
         return reply.status(400).send(errorResponse(userError))
@@ -66,12 +74,12 @@ async function routes(fastify, _options) {
         where: { user, assignment }
       })
 
-      if (!assignment) {
-        return reply.status(404).send({ message: 'Assignment not found' })
+      if (!theAssignment) {
+        return reply.status(404).send(errorResponse('Assignment not found'))
       }
 
-      await assignment.update({ image, params, user_params })
-      return reply.send(assignment)
+      await theAssignment.update({ image, params, user_params })
+      return reply.send(successResponse(theAssignment))
     })
 
   // Delete an assignment
@@ -87,7 +95,7 @@ async function routes(fastify, _options) {
       })
 
       if (!theAssignment) {
-        return reply.status(404).send({ message: 'Assignment not found' })
+        return reply.status(404).send(errorResponse('Assignment not found'))
       }
 
       await theAssignment.destroy()

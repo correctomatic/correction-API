@@ -28,5 +28,8 @@ Tutorial, very good
 https://www.nearform.com/insights/complete-guide-fastify-plugin-system/
 
 
+## Notes
 
 https://github.com/pundit-community/pundit.js
+
+https://fusionauth.io/dev-tools/jwt-decoder

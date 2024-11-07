@@ -3,7 +3,10 @@ const ASSIGNMENT_SCHEMA = {
   properties: {
     user: { type: 'string' },
     assignment: { type: 'string' },
-    params: { type: 'object' },
+    params: {
+      type: 'object',
+      additionalProperties: { type: 'string' }  // Accepts any key with a string value
+    },
     user_params: { type: 'array', items: { type: 'string' } }
   },
   required: ['user', 'assignment']  // include required assignment fields
@@ -56,10 +59,9 @@ const UPDATE_ASSIGNMENT_REQUEST_SCHEMA = {
   additionalProperties: false
 }
 
-// Define response schemas if needed
 const MODIFICATION_SUCCESS_RESPONSE_SCHEMA = {
   type: 'object',
-  required: ['success', 'message'],
+  required: ['success', 'assignment'],
   properties: {
     success: { "enum": [true] },
     assignment: ASSIGNMENT_SCHEMA
