@@ -1,5 +1,6 @@
 user,password,roles
 admin,admin,admin;otherrole
+correctomatic,correctomatic_pass,
 pagination,pagination
 foo,bar
 bar,tee,admin

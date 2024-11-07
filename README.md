@@ -4,7 +4,6 @@ Work in progress. Pending:
 - Assignments / image database
 - Security
 - Use a more flexible system for sharing the exercises with the correctomatic processes
-- Validate multipart forms with openapi schemas
 
 This API is the entry point for launching corrections. It provides and endpoint, `/grade`, that will upload the file
 to a shared folder and use BullMQ to create a correction task.
@@ -33,32 +32,7 @@ The log level can also be configured for debuggin purposes. The `QUEUE_NAME` is 
 
 ## Endpoints
 
-### POST /login
-
-Login endpoint. It will return a JWT token that must be used in the Authorization header for the rest of the requests.
-
-Expected parameters:
-- **user**: Name of the user
-- **password**: Password
-
-Example request from command line:
-```sh
-curl --request POST \
-  --url http://localhost:3000/login \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "user": "<user>",
-  "password": "<password>"
-}'
-```
-
-Example of authorization header in curl for subsequent requests:
-```sh
-curl --request <method> \
-  --url <enpoint> \
-  --header 'Authorization: Bearer eyJ...8R54jw' \
-  ...
-```
+## Grading
 
 ### POST /grade
 
@@ -107,3 +81,39 @@ You should open a server for receiving the results, ie, with netcat:
 ```sh
 nc -lk 9000
 ```
+
+## Assignment management
+
+TO-DO: describe the endpoints for managing the assignments
+
+
+## User management
+
+#### POST /login
+
+Login endpoint. It will return a JWT token that must be used in the Authorization header for the rest of the requests.
+
+Expected parameters:
+- **user**: Name of the user
+- **password**: Password
+
+Example request from command line:
+```sh
+curl --request POST \
+  --url http://localhost:3000/login \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "user": "<user>",
+  "password": "<password>"
+}'
+```
+
+Example of authorization header in curl for subsequent requests:
+```sh
+curl --request <method> \
+  --url <enpoint> \
+  --header 'Authorization: Bearer eyJ...8R54jw' \
+  ...
+```
+
+

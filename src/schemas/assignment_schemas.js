@@ -45,7 +45,7 @@ const CREATE_ASSIGNMENT_REQUEST_SCHEMA = {
 const UPDATE_ASSIGNMENT_REQUEST_SCHEMA = {
   type: 'object',
   properties: {
-    image: { type: 'string', format: 'uri' },
+    image: { type: 'string' },
     params: { type: 'object' },
     user_params: { type: 'array', items: { type: 'string' } }
   },

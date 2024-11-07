@@ -9,19 +9,19 @@ const {
 } = require('../../schemas/assignment_schemas')
 
 const { errorResponse } = require('../../lib/requests')
+const NOT_A_SEQUELIZE_ERROR = Symbol('Not a Sequelize error')
 
-function errorForUser(error) {
+function sequelizeError(error) {
   if (error.name === 'SequelizeValidationError') {
     const messages = error.errors.map(e => `Field '${e.path}': ${e.message}`).join(', ')
-    return(`Validation error(s): ${messages}`)
+    return (`Validation error(s): ${messages}`)
   }
 
   if (error.name === 'SequelizeUniqueConstraintError') {
-    return('Duplicated assignment')
+    return ('Duplicated assignment')
   }
 
-  // Handle other errors
-  return('Error creating assignment')
+  return NOT_A_SEQUELIZE_ERROR
 }
 
 function successResponse(assignment) {
@@ -53,10 +53,13 @@ async function routes(fastify, _options) {
           params,
           user_params
         })
-        await newAssignment.reload()
+
         return reply.status(201).send(successResponse(newAssignment))
       } catch (error) {
-        const userError = errorForUser(error)
+        const userError = sequelizeError(error)
+        if(userError === NOT_A_SEQUELIZE_ERROR) {
+          return reply.status(500).send(errorResponse('Internal server error'))
+        }
         return reply.status(400).send(errorResponse(userError))
       }
     })
@@ -66,20 +69,30 @@ async function routes(fastify, _options) {
     '/:user/:assignment',
     { schema: UPDATE_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
-      const { user } = request
+      const { user } = request.params
       const { assignment } = request.params
       const { image, params, user_params } = request.body
 
-      const theAssignment = await Assignment.findOne({
-        where: { user, assignment }
-      })
+      try {
 
-      if (!theAssignment) {
-        return reply.status(404).send(errorResponse('Assignment not found'))
+        const theAssignment = await Assignment.findOne({
+          where: { user, assignment }
+        })
+
+        if (!theAssignment) {
+          return reply.status(404).send(errorResponse('Assignment not found'))
+        }
+
+        await theAssignment.update({ image, params, user_params })
+        return reply.send(successResponse(theAssignment))
+
+      } catch (error) {
+        const userError = sequelizeError(error)
+        if(userError === NOT_A_SEQUELIZE_ERROR) {
+          return reply.status(500).send(errorResponse('Internal server error'))
+        }
+        return reply.status(400).send(errorResponse(userError))
       }
-
-      await theAssignment.update({ image, params, user_params })
-      return reply.send(successResponse(theAssignment))
     })
 
   // Delete an assignment
