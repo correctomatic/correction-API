@@ -31,6 +31,15 @@ fastify.register(multipart)
 
 // Run the server!
 try {
+
+  fastify.setErrorHandler((error, _request, reply) => {
+    fastify.log.error(error)
+    reply.status(400).send({
+      success: false,
+      message: error.message || 'An unexpected error occurred'
+    })
+  })
+
   fastify.register(dbConnector, { logging: (msg) => logger.info(msg) })
 
   // Routes MUST be loaded after the dbConnector plugin
