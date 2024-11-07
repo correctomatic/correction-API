@@ -10,6 +10,20 @@ const {
 
 const { errorResponse } = require('../../lib/requests')
 
+function errorForUser(error) {
+  if (error.name === 'SequelizeValidationError') {
+    const messages = error.errors.map(e => `Field '${e.path}': ${e.message}`).join(', ')
+    return(`Validation error(s): ${messages}`)
+  }
+
+  if (error.name === 'SequelizeUniqueConstraintError') {
+    return('Duplicated assignment')
+  }
+
+  // Handle other errors
+  return('Error creating assignment')
+}
+
 async function routes(fastify, _options) {
 
   const Assignment = fastify.db.sequelize.models.Assignment
@@ -19,14 +33,14 @@ async function routes(fastify, _options) {
   // Create a new assignment
   fastify.post(
     '/',
-    // { schema: CREATE_ASSIGNMENT_SCHEMA },
+    { schema: CREATE_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
       const { user } = request
       const { assignment, image, params, user_params } = request.body
 
       try {
         const newAssignment = await Assignment.create({
-          user: user.id,
+          user: user.user,
           assignment,
           image,
           params,
@@ -34,7 +48,8 @@ async function routes(fastify, _options) {
         })
         return reply.status(201).send(newAssignment)
       } catch (error) {
-        return reply.status(400).send(errorResponse('Error creating assignment'))
+        const userError = errorForUser(error)
+        return reply.status(400).send(errorResponse(userError))
       }
     })
 

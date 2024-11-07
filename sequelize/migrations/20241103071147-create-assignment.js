@@ -44,6 +44,14 @@ module.exports = {
       type: 'primary key',
       name: 'pk_user_assignment'
     })
+
+    // Add check constraints to enforce non-empty strings
+    await queryInterface.sequelize.query(`
+      ALTER TABLE "Assignments"
+      ADD CONSTRAINT user_not_empty CHECK (user <> ''),
+      ADD CONSTRAINT assignment_not_empty CHECK (assignment <> ''),
+      ADD CONSTRAINT image_not_empty CHECK (image <> '')
+    `)
   },
   async down(queryInterface, _Sequelize) {
     await queryInterface.dropTable('Assignments')

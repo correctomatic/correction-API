@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Password cannot be empty'
+        }
+      }
     },
   }, {
     sequelize,

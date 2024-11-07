@@ -17,13 +17,30 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'User',
         key: 'user',
+      },
+      validate: {
+        notEmpty: {
+          msg: 'User cannot be empty'
+        }
       }
     },
     assignment: {
       type: DataTypes.STRING,
       primaryKey: true,
+      validate: {
+        notEmpty: {
+          msg: 'Assignment cannot be empty'
+        }
+      }
     },
-    image: DataTypes.STRING,
+    image: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          msg: 'Image cannot be empty'
+        }
+      }
+    },
     params: DataTypes.JSON,
     user_params: DataTypes.ARRAY(DataTypes.STRING),
   }, {

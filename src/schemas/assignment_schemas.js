@@ -38,7 +38,7 @@ const CREATE_ASSIGNMENT_REQUEST_SCHEMA = {
   type: 'object',
   properties: {
     assignment: { type: 'string' },
-    image: { type: 'string', format: 'uri' },
+    image: { type: 'string' },
     params: { type: 'object' },
     user_params: { type: 'array', items: { type: 'string' } }
   },
@@ -91,7 +91,7 @@ const CREATE_ASSIGNMENT_SCHEMA = {
   summary: "Create Assignment",
   body: CREATE_ASSIGNMENT_REQUEST_SCHEMA,
   response: {
-    200: MODIFICATION_SUCCESS_RESPONSE_SCHEMA,
+    201: MODIFICATION_SUCCESS_RESPONSE_SCHEMA,
     400: ERROR_RESPONSE_SCHEMA,
     500: ERROR_RESPONSE_SCHEMA
   }
