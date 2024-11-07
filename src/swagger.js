@@ -3,35 +3,53 @@ TODO: Add a description of the API here.
 `
 
 const swaggerOptions = {
-  swagger: {
+  openapi:{
     info: {
-      title: "Correctomatic server API",
-      description: descriptions,
-      version: "1.0.0",
+      title: 'Correctomatic server API',
+      description: 'API para operaciones de calificación y gestión',
+      version: '1.0.0',
     },
-    schemes: ["http", "https"],
-    consumes: ["application/json"],
-    produces: ["application/json"],
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Servidor local'
+      }
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    },
+    security: [
+      {
+        bearerAuth: []
+      }
+    ],
     tags: [
       {
-        name: "Grading Operations",
-        description: "Endpoints for grading-related tasks.",
+        name: 'Grading Operations',
+        description: 'Endpoints para tareas de calificación'
       },
       {
-        name: "Assignments Management",
-        description: "Endpoints for managing assignments.",
+        name: 'Assignments Management',
+        description: 'Endpoints para gestión de asignaciones'
       },
       {
-        name: "Users Management",
-        description: "Endpoints for managing users.",
+        name: 'Users Management',
+        description: 'Endpoints para gestión de usuarios'
       },
       {
-        name: "Miscellaneous",
-        description: "Misceallaneous endpoints.",
-      },
-    ],
+        name: 'Miscellaneous',
+        description: 'Endpoints misceláneos'
+      }
+    ]
   },
 }
+
 
 // Code is not showing correctly in the Swagger UI, so we add some custom CSS
 const CUSTOM_CSS = `
