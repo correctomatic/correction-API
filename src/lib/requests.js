@@ -17,6 +17,11 @@ function validateQueryParams(schema) {
   }
 }
 
+function errorResponse(message) {
+  return { success: false, message }
+}
+
 module.exports = {
-  validateQueryParams
+  validateQueryParams,
+  errorResponse
 }

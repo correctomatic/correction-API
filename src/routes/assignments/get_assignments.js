@@ -1,8 +1,8 @@
 'use strict'
 
 const authenticate = require('../../middleware/authenticate')
-const { validateQueryParams } = require('../../lib/requests')
-const { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } = require('../../schemas/assignments/get_assignments_schemas')
+const { validateQueryParams, errorResponse } = require('../../lib/requests')
+const { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } = require('../../schemas/assignment_schemas')
 
 const DEFAULT_LIMIT = 10
 const MAX_LIMIT = 50
@@ -11,11 +11,6 @@ async function setLimitAndOffset(request, _reply) {
   let { limit, offset = 0 } = request.query
   request.limit = Math.min(parseInt(limit) || DEFAULT_LIMIT, MAX_LIMIT)
   request.offset = parseInt(offset) || 0
-}
-
-
-function errorResponse(message) {
-  return { success: false, message }
 }
 
 async function routes(fastify, _options) {

@@ -8,17 +8,18 @@ const {
   DELETE_ASSIGNMENT_SCHEMA
 } = require('../../schemas/assignment_schemas')
 
+const { errorResponse } = require('../../lib/requests')
+
 async function routes(fastify, _options) {
 
   const Assignment = fastify.db.sequelize.models.Assignment
 
   fastify.addHook('preHandler', authenticate)
 
-  
   // Create a new assignment
   fastify.post(
     '/',
-    { schema: CREATE_ASSIGNMENT_SCHEMA },
+    // { schema: CREATE_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
       const { user } = request
       const { assignment, image, params, user_params } = request.body
@@ -33,7 +34,7 @@ async function routes(fastify, _options) {
         })
         return reply.status(201).send(newAssignment)
       } catch (error) {
-        return reply.status(400).send({ message: 'Error creating assignment', error })
+        return reply.status(400).send(errorResponse('Error creating assignment'))
       }
     })
 
