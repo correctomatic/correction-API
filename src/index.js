@@ -21,7 +21,7 @@ const PORT = env.PORT
 const fastify = Fastify({
   logger,
   ajv: {
-    customOptions: { allErrors: true, strict: false },
+    customOptions: { allErrors: true, strict: false, removeAdditional: false, },
     plugins: [
       [require('ajv-errors')]
     ]
