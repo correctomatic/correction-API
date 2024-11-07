@@ -1,3 +1,4 @@
+const ERROR_RESPONSE_SCHEMA = require('./error_response_schema')
 
 const GRADE_REQUEST_SCHEMA = {
   type: 'object',
@@ -24,21 +25,6 @@ const GRADE_RESPONSE_SCHEMA = {
   }
 }
 
-const GRADE_ERROR_RESPONSE_SCHEMA = {
-  type: 'object',
-  required: ['success', 'message'],
-  properties: {
-    success: { "enum": [ false ] },
-    message: { type: 'string' },
-  }
-}
-
-const GRADE_RESPONSE = {
-  200: GRADE_RESPONSE_SCHEMA,
-  400: GRADE_ERROR_RESPONSE_SCHEMA,
-  500: GRADE_ERROR_RESPONSE_SCHEMA,
-}
-
 const GRADE_SCHEMA = {
   summary: "Correction request",
   description: "\
@@ -46,7 +32,20 @@ const GRADE_SCHEMA = {
   ",
   consumes: ['multipart/form-data'],
   body: GRADE_REQUEST_SCHEMA,
-  response: GRADE_RESPONSE
+  response: {
+    200: {
+      description: "Successful correction request",
+      ...GRADE_RESPONSE_SCHEMA
+    },
+    400: {
+      description: "Invalid request",
+      ...ERROR_RESPONSE_SCHEMA
+    },
+    500: {
+      description: "Internal server error",
+      ...ERROR_RESPONSE_SCHEMA
+    }
+  }
 }
 
 export {
