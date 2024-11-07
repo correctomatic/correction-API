@@ -6,7 +6,7 @@ const GRADE_REQUEST_SCHEMA = {
     work_id: { type: 'string' },
     assignment_id: { type: 'string' },
     callback: { type: 'string' },
-    file: { type: 'object', format: 'binary' },
+    file: { type: 'object', format: 'binary', description: 'File to be graded' },
     params: {
       type: 'array',
       items: { type: 'string' }
@@ -45,9 +45,10 @@ const GRADE_SCHEMA = {
       description: "Internal server error",
       ...ERROR_RESPONSE_SCHEMA
     }
-  }
+  },
+
 }
 
-export {
+module.exports = {
   GRADE_SCHEMA,
 }

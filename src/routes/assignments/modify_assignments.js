@@ -63,7 +63,7 @@ async function routes(fastify, _options) {
 
   // Update an existing assignment
   fastify.put(
-    '/:assignment',
+    '/:user/:assignment',
     { schema: UPDATE_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
       const { user } = request
@@ -84,14 +84,14 @@ async function routes(fastify, _options) {
 
   // Delete an assignment
   fastify.delete(
-    '/:assignment',
+    '/:user/:assignment',
     { schema: DELETE_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
       const { user } = request
       const { assignment } = request.params
 
       const theAssignment = await Assignment.findOne({
-        where: { user: user.id, assignment: assignmentId }
+        where: { user: user.id, assignment }
       })
 
       if (!theAssignment) {

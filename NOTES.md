@@ -33,3 +33,12 @@ https://www.nearform.com/insights/complete-guide-fastify-plugin-system/
 https://github.com/pundit-community/pundit.js
 
 https://fusionauth.io/dev-tools/jwt-decoder
+
+
+### Validation
+https://github.com/fastify/fastify-swagger/issues/47#issuecomment-463618725
+
+https://github.com/fastify/fastify-multipart/issues/59#issuecomment-471164169
+
+https://github.com/fastify/fastify-swagger/issues/47#issuecomment-581986995
+

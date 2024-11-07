@@ -100,9 +100,9 @@ async function routes(fastify, _options) {
 
   fastify.post(
     '/grade',
-    // TO-DO: this generates "body must be object" error
-    // { schema: GRADE_SCHEMA },
     {
+      // TO-DO: this generates "body must be object" error
+      // schema: GRADE_SCHEMA,
       preHandler: authenticate,
       preValidation: preValidateGrade
     },
