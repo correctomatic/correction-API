@@ -5,6 +5,7 @@ const ASSIGNMENT_SCHEMA = {
   properties: {
     user: { type: 'string' },
     assignment: { type: 'string' },
+    image: { type: 'string' },
     params: {
       type: 'object',
       additionalProperties: { type: 'string' }  // Accepts any key with a string value
