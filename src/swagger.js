@@ -6,13 +6,13 @@ const swaggerOptions = {
   openapi:{
     info: {
       title: 'Correctomatic server API',
-      description: 'API para operaciones de calificación y gestión',
+      description: 'API for the Correctomatic server',
       version: '1.0.0',
     },
     servers: [
       {
         url: 'http://localhost:3000',
-        description: 'Servidor local'
+        description: 'Local server'
       }
     ],
     components: {
@@ -28,19 +28,23 @@ const swaggerOptions = {
     tags: [
       {
         name: 'Grading Operations',
-        description: 'Endpoints para tareas de calificación'
+        description: 'Endpoints for grading operations'
       },
       {
         name: 'Assignments Management',
-        description: 'Endpoints para gestión de asignaciones'
+        description: 'Endpoints for managing assignments'
       },
       {
         name: 'Users Management',
-        description: 'Endpoints para gestión de usuarios'
+        description: 'Endpoints for managing users'
+      },
+      {
+        name: 'API Key Management',
+        description: 'Endpoints for managing API keys'
       },
       {
         name: 'Miscellaneous',
-        description: 'Endpoints misceláneos'
+        description: 'Miscellaneous endpoints'
       }
     ]
   },
