@@ -28,11 +28,19 @@ const GRADE_REQUEST_SCHEMA = {
     },
     file: { format: 'binary', description: 'File to be graded' },
     param: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: { value: { type: 'string' } },
-      },
+      oneOf: [
+        {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { value: { type: 'string' } },
+          }
+        },
+        {
+          type: 'object',
+          properties: { value: { type: 'string' } },
+        }
+      ],
       description: 'You can include as many fields named `param` with the params ' +
         'that will be passed to the container as environment variables. ' +
         'The content of each field must have the format `ENV_VAR_NAME=VALUE`, ' +
