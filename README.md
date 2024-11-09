@@ -14,12 +14,20 @@ in the server.
 ## Configuration
 
 The API uses an .env file for the configuration. It must be placed in the app's directory. The most important entries
-are for configuring the access to the Redis server:
+are for configuring the access to the Redis server and the Database:
 
 ```sh
-REDIS_HOST=<redis server address>
+# --------------------------------
+# Database options
+# --------------------------------
+DB_HOST=localhost
 ...
-REDIS_PASSWORD=<password>
+
+# --------------------------------
+# Environment variables for redis, needed by bullMQ
+# --------------------------------
+REDIS_HOST=localhost
+...
 ```
 
 You will need to configure a shared folder between the API and the correction processes:
@@ -32,9 +40,11 @@ The log level can also be configured for debuggin purposes. The `QUEUE_NAME` is 
 
 ## Endpoints
 
-## Grading
+The API is documented using OpenAPI. You can access the documentation in the `/docs` endpoint.
 
-### POST /grade
+### Grading
+
+#### POST /grade
 
 This is the maint endpoint, used to enqueue a correction. The correction will be processed by the different processes in the correction runner.
 
@@ -82,12 +92,18 @@ You should open a server for receiving the results, ie, with netcat:
 nc -lk 9000
 ```
 
-## Assignment management
+### Assignment management
 
-TO-DO: describe the endpoints for managing the assignments
+There is a REST API for managing the assignments. The endpoints are:
 
+- `GET /assignments`: Get all the assignments
+- `POST /assignments`: Create a new assignment **for the user logged in**
+- `GET /assignments/:user`: Get all the assignments for a user
+- `GET /assignments/:user/:assignment`: Get the details of an assignment
+- `PUT /assignments/:user/:assignment`: Update the details of an assignment
+- `DELETE /assignments/:user/:assignment`: Delete an assignment
 
-## User management
+### User management
 
 #### POST /login
 
@@ -116,4 +132,17 @@ curl --request <method> \
   ...
 ```
 
+## Development
 
+There is a docker-compose file for development. You can start the services needed by the api
+with the command `docker-compose up`.
+
+Create a `.env` file with the configuration for the API. For development, you can simply copy the `.env.example` file.
+It will be useful to change `JWT_EXPIRES_IN` to something longer, like `30d`, if you don't want to be logging in every time.
+
+After that, you can run the API and it will be available in `http://localhost:3000`:
+```sh
+node src/index.js
+```
+
+You can use the (correctomatic-server)[https://github.com/correctomatic/correctomatic-server] project to test the API integration with the correction processes.
