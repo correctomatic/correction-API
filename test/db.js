@@ -1,18 +1,6 @@
-let db
+const { Sequelize } = require('sequelize')
+const config = require('../sequelize/config')
 
-function setDB(newDB) {
-  db = newDB
-}
+const sequelize = new Sequelize(config.test)
 
-function getDB() {
-  return db
-}
-
-console.log('******************************')
-console.log('db.js')
-console.log('******************************')
-
-module.exports = {
-  setDB,
-  getDB
-}
+module.exports = sequelize

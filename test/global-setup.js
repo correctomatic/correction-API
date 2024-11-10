@@ -1,4 +1,4 @@
-const initDB = require('@db')
+const initDB = require('../src/db')
 const { execSync } = require('child_process')
 const { setDB } = require('./db')
 
