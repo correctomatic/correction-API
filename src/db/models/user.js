@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'User',
     hooks: {
       async beforeCreate(user) {
+        /* eslint-disable require-atomic-updates */
         user.password = await bcrypt.hash(user.password, 10)
       },
       async beforeUpdate(user) {

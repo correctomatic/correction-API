@@ -41,12 +41,6 @@ function userError(e) {
   return (e instanceof ParamsError) || (e instanceof ImageError)
 }
 
-async function preValidateGrade(req, reply) {
-  const data = req.body.file
-  if (data.type !== 'file') throw new ParamsError('file field must be a file')
-}
-
-
 async function routes(fastify, _options) {
 
   // This API enqueues the result

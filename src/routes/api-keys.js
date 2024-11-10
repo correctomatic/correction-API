@@ -39,7 +39,7 @@ async function routes(fastify, _options) {
       try {
         const apiKeys = await ApiKey.findAll({ where: { user } })
         reply.send(apiKeys)
-      } catch (error) {
+      } catch(_error) {
         reply.status(500).send({ error: 'Failed to list API keys' })
       }
     })
@@ -58,7 +58,7 @@ async function routes(fastify, _options) {
         apiKey.revokedAt = new Date()
         await apiKey.save()
         reply.send({ message: 'API key revoked' })
-      } catch (error) {
+      } catch(_error) {
         reply.status(500).send({ error: 'Failed to revoke API key' })
       }
     })

@@ -9,7 +9,7 @@ const {
 } = require('../../schemas/assignment_schemas')
 
 const { errorResponse } = require('../../lib/requests')
-const { sequelizeError } = require('../../lib/errors')
+const { handleSequelizeError } = require('../../lib/errors')
 
 function successResponse(assignment) {
   return {
@@ -43,10 +43,7 @@ async function routes(fastify, _options) {
 
         return reply.status(201).send(successResponse(newAssignment))
       } catch (error) {
-        const userError = sequelizeError(error)
-
-        if (userError) return reply.status(400).send(errorResponse(userError))
-        else return reply.status(500).send(errorResponse('Internal server error'))
+        handleSequelizeError(error, reply, 'Error creating assignment')
       }
     })
 
@@ -72,11 +69,7 @@ async function routes(fastify, _options) {
         return reply.send(successResponse(theAssignment))
 
       } catch (error) {
-        const userError = sequelizeError(error)
-        if (userError === NOT_A_SEQUELIZE_ERROR) {
-          return reply.status(500).send(errorResponse('Internal server error'))
-        }
-        return reply.status(400).send(errorResponse(userError))
+        handleSequelizeError(error, reply, 'Error updating assignment')
       }
     })
 
@@ -100,11 +93,7 @@ async function routes(fastify, _options) {
         return reply.status(204).send()
 
       } catch (error) {
-        const userError = sequelizeError(error)
-        if (userError === NOT_A_SEQUELIZE_ERROR) {
-          return reply.status(500).send(errorResponse('Internal server error'))
-        }
-        return reply.status(400).send(errorResponse(userError))
+        handleSequelizeError(error, reply, 'Error deleting assignment')
       }
     })
 }

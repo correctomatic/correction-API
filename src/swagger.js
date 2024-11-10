@@ -1,12 +1,12 @@
-const descriptions = `
-TODO: Add a description of the API here.
+const description = `
+API for the Correctomatic server
 `
 
 const swaggerOptions = {
   openapi:{
     info: {
       title: 'Correctomatic server API',
-      description: 'API for the Correctomatic server',
+      description,
       version: '1.0.0',
     },
     servers: [

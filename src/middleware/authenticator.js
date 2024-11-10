@@ -12,7 +12,7 @@ async function bearerAuthenticate(request) {
   try {
     const { user } = jwt.verify(token, env.jwt.secretKey)
     return user
-  } catch (error) {
+  } catch (_error) {
     return null
   }
 }
@@ -48,17 +48,33 @@ function getAuthFunctionsByNames(names) {
 }
 
 
+async function getAuthenticatedUser(request, functions) {
+  for (const authFunction of functions) {
+    // We want to run the auth methods in order
+    /* eslint-disable no-await-in-loop */
+    const user = await authFunction(request)
+    if (user) return user
+  }
+
+  return null
+}
+
 function authenticator(...methods) {
   return async function (request, reply) {
 
     const authFunctions = getAuthFunctionsByNames(methods)
+    if (authFunctions.length === 0) {
+      logger.error('No valid authentication methods provided: ' + methods)
+      return reply.status(500).send(errorResponse('Internal server error'))
+    }
 
-    for (const authFunction of authFunctions) {
-      const user = await authFunction(request)
-      if (user) {
-        request.user = user
-        return
-      }
+    const user = await getAuthenticatedUser(request, authFunctions)
+
+    if (user) {
+      // The race condition is not a problem here, because the request object is unique for each request
+      /* eslint-disable require-atomic-updates */
+      request.user = user
+      return
     }
 
     // Send unauthorized response if no method succeeds
