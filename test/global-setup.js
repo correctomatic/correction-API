@@ -1,7 +1,8 @@
 const initDB = require('@db')
 const { execSync } = require('child_process')
+const { setDB } = require('./db')
 
-const initTables = () => {
+function initTables() {
   console.log('Running migrations...')
   execSync('npx sequelize db:migrate:undo:all --env test', { stdio: 'inherit' })
   execSync('npx sequelize db:migrate --env test', { stdio: 'inherit' })
@@ -12,8 +13,13 @@ const runSeeders = () => {
   execSync('npx sequelize db:seed:all --env test', { stdio: 'inherit' })
 }
 
-module.exports = async () => {
-  global.db = await initDB()
+global.banana = 'banana'
+
+module.exports = async (globalConfig) => {
+  console.log('Global setup')
+  const db = await initDB()
+  globalThis.db = db
+  setDB(db)
   const { sequelize } = db
   await sequelize.authenticate()
   initTables()

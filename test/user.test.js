@@ -1,24 +1,17 @@
 'use strict'
 const bcrypt = require('bcrypt')
-const { sequelize, DataTypes } = require('../sequelize_instance')
 
-// const realPath = require.resolve('@models/assignment')
-// console.log('Real path of the module:', realPath)
-
-// const UserModel = require('@models/user')
-// const AssignmentModel = require('@models/assignment')
-const UserModel = require("../../src/db/models/user")
-const AssignmentModel = require("../../src/db/models/user")
+const { getDB } = require('./db')
+console.log('user.test.js')
+console.log(globalThis.db )
 
 describe('User Model', () => {
-  let User
-  let Assignment
+
+  const db = getDB()
+  const { sequelize } = db
+  const { User, Assignment } = db.models
 
   beforeAll(async () => {
-    // Initialize models
-    User = UserModel(sequelize, DataTypes)
-    Assignment = AssignmentModel(sequelize, DataTypes)
-    User.associate({ Assignment })
   })
 
   afterAll(async () => {
@@ -26,14 +19,9 @@ describe('User Model', () => {
   })
 
   describe.only('Test', () => {
-    it('BANANA!!', async () => {
-      try {
-        // const user = await User.create({user: 'testUser', password: 'plainPassword', roles: ['assignments']})
-        // expect(User.modelName).toBe('User')
-        expect(2).toBe(2)
-      }catch(e){
-        console.log(e)
-      }
+    it('should test DB', async () => {
+      const user = await User.create({user: 'testUser', password: 'plainPassword', roles: ['assignments']})
+      expect(user.user).toBe('testUser')
     })
   })
 
