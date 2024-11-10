@@ -41,6 +41,10 @@ function userError(e) {
   return (e instanceof ParamsError) || (e instanceof ImageError)
 }
 
+function checkFileReceived(request) {
+  if (request.body?.file?.type !== 'file') throw new ParamsError('file field must be a file')
+}
+
 async function routes(fastify, _options) {
 
   // This API enqueues the result
@@ -66,7 +70,7 @@ async function routes(fastify, _options) {
     async (req, reply) => {
 
       try {
-        if (req.body?.file?.type !== 'file') throw new ParamsError('file field must be a file')
+        checkFileReceived(req)
 
         logger.debug('Received file for grading')
         const uploadedFile = await moveToUploadsDir(UPLOAD_DIRECTORY, req.file)
