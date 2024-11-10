@@ -1,9 +1,9 @@
 const fp = require('fastify-plugin')
-const initDB = require('../db/index.js') // Import all models as an object
+const initDB = require('../db/index.js')
 
 async function dbConnector(fastify, options) {
   const db = initDB(options)
-  
+
   await db.sequelize.authenticate()
   fastify.log.info('Database connection has been established successfully.')
 

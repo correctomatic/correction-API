@@ -10,11 +10,12 @@ const config = {
     // logging: true,
   },
   test: {
-    username: process.env.DB_USER || 'defaultUser',
-    password: process.env.DB_PASSWORD || 'defaultPassword',
-    database: 'my_database_test',
+    username: 'correctomatic_test',
+    password: 'correctomatic_test',
+    database:  'correctomatic_test',
     host: '127.0.0.1',
     dialect: 'postgres',
+    logging: false,
   },
   production: {
     username: process.env.DB_USER,

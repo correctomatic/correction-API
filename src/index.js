@@ -1,5 +1,6 @@
 const env = require('./config/env')
 const { join } = require('path')
+require('module-alias/register')
 
 const Fastify = require('fastify')
 const AutoLoad = require('@fastify/autoload')
