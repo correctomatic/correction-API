@@ -14,6 +14,7 @@ const config = {
     password: 'correctomatic_test',
     database:  'correctomatic_test',
     host: '127.0.0.1',
+    port: 54321,
     dialect: 'postgres',
     logging: false,
   },

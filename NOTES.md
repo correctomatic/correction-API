@@ -10,6 +10,8 @@ https://github.com/taythebot/fastify-template.git
 npx sequelize-cli db:migrate
 npx sequelize-cli db:migrate:undo:all
 
+npx sequelize db:migrate --env test
+
 npx sequelize-cli db:seed:all
 npx sequelize-cli db:seed --seed users-seeder
 
