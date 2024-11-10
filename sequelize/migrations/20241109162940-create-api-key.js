@@ -4,9 +4,13 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('ApiKeys', {
+      key: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        primaryKey: true,
+      },
       user: {
         type: Sequelize.STRING,
-        primaryKey: true,
         references: {
           model: 'Users', // Assumes a Users table exists with a primary key 'user'
           key: 'user'
@@ -17,11 +21,6 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
-      },
-      key: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        primaryKey: true,
       },
       createdAt: {
         type: Sequelize.DATE,
