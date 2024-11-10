@@ -52,11 +52,8 @@ async function routes(fastify, _options) {
 
       try {
         const apiKey = await ApiKey.findByPk(id)
-        if (!apiKey) {
-          return reply.status(404).send({ error: 'API key not found' })
-        }
-        apiKey.revokedAt = new Date()
-        await apiKey.save()
+        if (!apiKey) return reply.status(404).send({ error: 'API key not found' })
+        await apiKey.destroy()
         reply.send({ message: 'API key revoked' })
       } catch(_error) {
         reply.status(500).send({ error: 'Failed to revoke API key' })
