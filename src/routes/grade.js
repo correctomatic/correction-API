@@ -1,9 +1,8 @@
 const env = require('../config/env')
 const logger = require('../logger')
-// TO-DO: Schemas are not working for multipart forms
 const { GRADE_SCHEMA } = require('../schemas/grade_schemas')
 
-const authenticate = require('../middleware/authenticate')
+const authenticate = require('../middleware/authenticator')
 
 const { ensureDirectoryExists, moveToUploadsDir } = require('../lib/utils')
 const { createCorrectionJob } = require('../lib/correctomatic')
@@ -40,17 +39,6 @@ async function getImage(db, assignment_id) {
 
 function userError(e) {
   return (e instanceof ParamsError) || (e instanceof ImageError)
-}
-
-function checkFile(_req, reply, data) {
-  if (!data) {
-    reply.code(400).send({
-      success: false,
-      message: 'No file received',
-    })
-    return false
-  }
-  return true
 }
 
 async function preValidateGrade(req, reply) {

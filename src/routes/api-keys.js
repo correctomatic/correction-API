@@ -2,23 +2,31 @@ const {
   CREATE_API_KEY_SCHEMA,
   LIST_API_KEYS_SCHEMA,
   DELETE_API_KEY_SCHEMA
-} = require('../schemas/api_keys_schemas')
+} = require('../schemas/api-keys_schemas')
+
+const authenticator = require('../middleware/authenticator')
+const { errorResponse } = require('../lib/requests')
+const { sequelizeError } = require('../lib/errors')
 
 async function routes(fastify, _options) {
 
   const ApiKey = fastify.db.sequelize.models.ApiKey
 
+  fastify.addHook('preHandler', authenticator('bearer'))
+
   fastify.post(
     '/api-keys',
     { schema: CREATE_API_KEY_SCHEMA },
     async (request, reply) => {
-      const { userId } = request.body
+      const user = request.user
 
       try {
-        const apiKey = await ApiKey.create({ userId })
+        const apiKey = await ApiKey.create({ user })
         reply.send({ key: apiKey.key })
       } catch (error) {
-        reply.status(500).send({ error: 'Failed to generate API key' })
+        const userError = sequelizeError(error)
+        if (userError) return reply.status(400).send(errorResponse(userError))
+        else return reply.status(500).send(errorResponse('Internal server error'))
       }
     })
 
@@ -26,10 +34,10 @@ async function routes(fastify, _options) {
     '/api-keys',
     { schema: LIST_API_KEYS_SCHEMA },
     async (request, reply) => {
-      const { userId } = request.query
+      const user = request.user
 
       try {
-        const apiKeys = await ApiKey.findAll({ where: { userId } })
+        const apiKeys = await ApiKey.findAll({ where: { user } })
         reply.send(apiKeys)
       } catch (error) {
         reply.status(500).send({ error: 'Failed to list API keys' })

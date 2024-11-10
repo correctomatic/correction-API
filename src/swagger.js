@@ -21,10 +21,15 @@ const swaggerOptions = {
           type: 'http',
           scheme: 'bearer',
           bearerFormat: 'JWT'
+        },
+        apiKeyAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'api-key'
         }
       }
     },
-    security: [{ bearerAuth: [] }],
+    security: [{ bearerAuth: [], apiKeyAuth: [] }],
     tags: [
       {
         name: 'Grading Operations',

@@ -25,11 +25,12 @@ const CREATE_API_KEY_SCHEMA = {
   tags: ["API Key Management"],
   summary: "Create Api Key",
   description: "Creates a new API key for the current user.",
-  body: CREATE_API_KEY_RESPONSE_SCHEMA,
+  security: [{ bearerAuth: [] }],
+  // body: CREATE_API_KEY_RESPONSE_SCHEMA,
   response: {
     200: {
       description: 'Successfully created the API key.',
-      type: 'null',
+      ...CREATE_API_KEY_RESPONSE_SCHEMA
     },
     400: {
       description: 'Bad request, invalid input data or missing required fields.',
@@ -46,6 +47,7 @@ const LIST_API_KEYS_SCHEMA = {
   tags: ["API Key Management"],
   summary: "List Api Keys",
   description: "Lists all the API keys for the current user.",
+  security: [{ bearerAuth: [] }],
   response: {
     200: {
       description: 'Successfully retrieved the list of API keys.',
@@ -66,7 +68,7 @@ const DELETE_API_KEY_SCHEMA = {
   tags: ["API Key Management"],
   summary: "Remove an Api Key",
   description: "Removes the specified API key.",
-  // body: { type: 'object', additionalProperties: false }, // Empty object schema
+  security: [{ bearerAuth: [] }],
   response: {
     204: {
       description: 'Successfully deleted the assignment.',

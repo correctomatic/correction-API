@@ -12,7 +12,21 @@ class ImageError extends Error {
   }
 }
 
+function sequelizeError(error) {
+  if (error.name === 'SequelizeValidationError') {
+    const messages = error.errors.map(e => `Field '${e.path}': ${e.message}`).join(', ')
+    return (`Validation error(s): ${messages}`)
+  }
+
+  if (error.name === 'SequelizeUniqueConstraintError') {
+    return ('Duplicated assignment')
+  }
+
+  return null
+}
+
 module.exports = {
   ParamsError,
-  ImageError
+  ImageError,
+  sequelizeError
 }

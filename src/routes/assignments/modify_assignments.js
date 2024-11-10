@@ -1,6 +1,6 @@
 'use strict'
 
-const authenticate = require('../../middleware/authenticate')
+const authenticator = require('../../middleware/authenticator')
 
 const {
   CREATE_ASSIGNMENT_SCHEMA,
@@ -9,20 +9,7 @@ const {
 } = require('../../schemas/assignment_schemas')
 
 const { errorResponse } = require('../../lib/requests')
-const NOT_A_SEQUELIZE_ERROR = Symbol('Not a Sequelize error')
-
-function sequelizeError(error) {
-  if (error.name === 'SequelizeValidationError') {
-    const messages = error.errors.map(e => `Field '${e.path}': ${e.message}`).join(', ')
-    return (`Validation error(s): ${messages}`)
-  }
-
-  if (error.name === 'SequelizeUniqueConstraintError') {
-    return ('Duplicated assignment')
-  }
-
-  return NOT_A_SEQUELIZE_ERROR
-}
+const { sequelizeError } = require('../../lib/errors')
 
 function successResponse(assignment) {
   return {
@@ -35,7 +22,7 @@ async function routes(fastify, _options) {
 
   const Assignment = fastify.db.sequelize.models.Assignment
 
-  fastify.addHook('preHandler', authenticate)
+  fastify.addHook('preHandler', authenticator())
 
   // Create a new assignment
   fastify.post(
@@ -57,10 +44,9 @@ async function routes(fastify, _options) {
         return reply.status(201).send(successResponse(newAssignment))
       } catch (error) {
         const userError = sequelizeError(error)
-        if (userError === NOT_A_SEQUELIZE_ERROR) {
-          return reply.status(500).send(errorResponse('Internal server error'))
-        }
-        return reply.status(400).send(errorResponse(userError))
+
+        if (userError) return reply.status(400).send(errorResponse(userError))
+        else return reply.status(500).send(errorResponse('Internal server error'))
       }
     })
 

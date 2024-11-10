@@ -1,6 +1,5 @@
 'use strict'
 
-const authenticate = require('../../middleware/authenticate')
 const { validateQueryParams, errorResponse } = require('../../lib/requests')
 const { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } = require('../../schemas/assignment_schemas')
 
