@@ -2,7 +2,7 @@ const env = require('../config/env')
 const logger = require('../logger')
 const { GRADE_SCHEMA } = require('../schemas/grade_schemas')
 
-const authenticate = require('../middleware/authenticator')
+const authenticator = require('../middleware/authenticator')
 
 const { ensureDirectoryExists, moveToUploadsDir } = require('../lib/utils')
 const { createCorrectionJob } = require('../lib/correctomatic')
@@ -60,12 +60,12 @@ async function routes(fastify, _options) {
   // - success: boolean
   // - message: string ('Work enqueued for grading' or 'Error grading work')
 
+  fastify.addHook('preHandler', authenticator())
+
   fastify.post(
     '/grade',
     {
-      schema: GRADE_SCHEMA,
-      preHandler: authenticate,
-      // preValidation: preValidateGrade
+      schema: GRADE_SCHEMA
     },
     async (req, reply) => {
 

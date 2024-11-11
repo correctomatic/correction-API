@@ -1,8 +1,7 @@
 # Correctomatic API
 
 Work in progress. Pending:
-- Assignments / image database
-- Security
+- Security roles
 - Use a more flexible system for sharing the exercises with the correctomatic processes
 
 This API is the entry point for launching corrections. It provides and endpoint, `/grade`, that will upload the file
@@ -11,32 +10,48 @@ to a shared folder and use BullMQ to create a correction task.
 Be careful, currently there is no security implemented: if someone has access to the API can run arbitrary containers
 in the server.
 
-## Configuration
+## Authentication
 
-The API uses an .env file for the configuration. It must be placed in the app's directory. The most important entries
-are for configuring the access to the Redis server and the Database:
+The API uses two types of authentication:
+- **JWT**: The JWT is obtained with the `/login` endpoint. It must be sent in the `Authorization` header.
+- **API key**: The API key is passed in the header as `x-api-key`
 
+### JWT Authentication
+
+The JWT token is obtained by calling the `POST /login` endpoint. It will return a JWT token that must be used in the Authorization header for the rest of the requests. This is a login request example from command line:
 ```sh
-# --------------------------------
-# Database options
-# --------------------------------
-DB_HOST=localhost
-...
-
-# --------------------------------
-# Environment variables for redis, needed by bullMQ
-# --------------------------------
-REDIS_HOST=localhost
-...
+curl --request POST \
+  --url http://localhost:3000/login \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "user": "<user>",
+  "password": "<password>"
+}'
 ```
 
-You will need to configure a shared folder between the API and the correction processes:
+The JWT token must be sent in the authorization header for subsequent requests:
 ```sh
-# Directory where uploaded files are uploaded and shared
-UPLOAD_DIRECTORY=/tmp
+curl --request <method> \
+  --url <enpoint> \
+  --header 'Authorization: Bearer eyJ...8R54jw' \
+  ...
 ```
 
-The log level can also be configured for debuggin purposes. The `QUEUE_NAME` is standard, you should'nt modify it.
+### API key Authentication
+
+The API key is passed in the `x-api-key` header:
+```sh
+curl --request <method> \
+  --url <enpoint> \
+  --header '
+  x-api-key: <api-key>
+  ...
+```
+
+Keys are managed through the API. You can create a new key with the `POST /keys` endpoint. The key is returned in the response. The keys are revoked by deleting them with the `DELETE /keys/:key` endpoint.
+
+You can't use API key authentication for the API key management endpoints.
+
 
 ## Endpoints
 
@@ -103,46 +118,59 @@ There is a REST API for managing the assignments. The endpoints are:
 - `PUT /assignments/:user/:assignment`: Update the details of an assignment
 - `DELETE /assignments/:user/:assignment`: Delete an assignment
 
+
+### API key management
+
+- `GET /keys`: Get all the keys for the user logged in
+- `POST /keys`: Create a new key for the user logged in
+- `DELETE /keys/:key`: Delete a key
+
 ### User management
 
-#### POST /login
+- `POST /login`: Get a JWT token for the user
 
-Login endpoint. It will return a JWT token that must be used in the Authorization header for the rest of the requests.
+TO-DO: Add user management endpoints. Only the login endpoint is implemented.
 
-Expected parameters:
-- **user**: Name of the user
-- **password**: Password
 
-Example request from command line:
+## Configuration
+
+The API uses an `.env` file for the configuration. It must be placed in the app's directory. The most important entries
+are for configuring the access to the Redis server and the Database:
+
 ```sh
-curl --request POST \
-  --url http://localhost:3000/login \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "user": "<user>",
-  "password": "<password>"
-}'
+# --------------------------------
+# Database options
+# --------------------------------
+DB_HOST=localhost
+...
+
+# --------------------------------
+# Environment variables for redis, needed by bullMQ
+# --------------------------------
+REDIS_HOST=localhost
+...
 ```
 
-Example of authorization header in curl for subsequent requests:
+You will need to configure a shared folder between the API and the correction processes:
 ```sh
-curl --request <method> \
-  --url <enpoint> \
-  --header 'Authorization: Bearer eyJ...8R54jw' \
-  ...
+# Directory where uploaded files are uploaded and shared
+UPLOAD_DIRECTORY=/tmp
 ```
+
+The log level can also be configured for debuggin purposes. The `QUEUE_NAME` is standard, you should'nt modify it.
 
 ## Development
 
 There is a docker-compose file for development. You can start the services needed by the api
 with the command `docker-compose up`.
 
-Create a `.env` file with the configuration for the API. For development, you can simply copy the `.env.example` file.
-It will be useful to change `JWT_EXPIRES_IN` to something longer, like `30d`, if you don't want to be logging in every time.
+Before running the app you must create a `.env` file with the configuration for the API. For development, you can simply copy the `.env.example` file. It will be useful to change `JWT_EXPIRES_IN` to something longer, like `30d`, if you don't want to be logging in every time.
 
-After that, you can run the API and it will be available in `http://localhost:3000`:
+After that, install dependencies and you can run the API. It will be available in `http://localhost:3000`:
 ```sh
-node src/index.js
+yarn dev
 ```
 
-You can use the (correctomatic-server)[https://github.com/correctomatic/correctomatic-server] project to test the API integration with the correction processes.
+You can use the [correctomatic-server](https://github.com/correctomatic/correctomatic-server) project to test the API integration with the correction processes.
+
+The tests are not working yet.

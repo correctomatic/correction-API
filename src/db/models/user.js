@@ -7,10 +7,29 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.hasMany(models.Assignment, { foreignKey: 'user', as: 'assignments' })
+      User.hasMany(models.ApiKey, { foreignKey: 'user', as: 'apiKeys' })
     }
 
     async validatePassword(password) {
       return bcrypt.compare(password, this.password)
+    }
+
+    static async findByApiKey(apiKey) {
+      return await this.findOne({
+        include: {
+          model: sequelize.models.ApiKey,
+          as: 'apiKeys',
+          where: { key: apiKey },
+        },
+      })
+    }
+
+    async findApiKey(keyValue) {
+      const apiKeys = await this.getApiKeys({
+        where: { key: keyValue },
+        limit: 1
+      })
+      return apiKeys[0] || null
     }
   }
 

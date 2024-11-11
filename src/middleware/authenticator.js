@@ -9,9 +9,12 @@ async function bearerAuthenticate(request) {
   const token = request.headers['authorization']?.split(' ')[1]
   if (!token) return null
 
+  const db = request.server.db
+
   try {
     const { user } = jwt.verify(token, env.jwt.secretKey)
-    return user
+    const theUser = await db.User.findByPk(user)
+    return theUser || null
   } catch (_error) {
     return null
   }
@@ -21,13 +24,11 @@ async function apiKeyAuthenticate(request) {
   const apiKey = request.headers['x-api-key']
   if (!apiKey) return null
 
-  const fastifyInstance = request.server
-  const db = fastifyInstance.db
-
+  const db = request.server.db
 
   try {
-    const user = await db.User.findOne({ where: { apiKey } })
-    return user.user || null
+    const user = await db.User.findByApiKey(apiKey)
+    return user || null
   } catch (error) {
     logger.error(`Error searching the API key in the database: ${error.message}`)
     return null
@@ -46,7 +47,6 @@ function getAuthFunctionsByNames(names) {
     .filter(name => AUTHENTICATE_METHODS[name])
     .map(name => AUTHENTICATE_METHODS[name])
 }
-
 
 async function getAuthenticatedUser(request, functions) {
   for (const authFunction of functions) {

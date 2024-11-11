@@ -25,7 +25,7 @@ const swaggerOptions = {
         apiKeyAuth: {
           type: 'apiKey',
           in: 'header',
-          name: 'api-key'
+          name: 'x-api-key'
         }
       }
     },

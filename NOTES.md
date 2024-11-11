@@ -37,6 +37,10 @@ https://github.com/pundit-community/pundit.js
 https://fusionauth.io/dev-tools/jwt-decoder
 
 
+Create JWT token:
+http://jwtbuilder.jamiekurtz.com/
+
+
 ### Validation
 https://github.com/fastify/fastify-swagger/issues/47#issuecomment-463618725
 

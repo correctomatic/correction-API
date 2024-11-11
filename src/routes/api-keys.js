@@ -21,7 +21,7 @@ async function routes(fastify, _options) {
       const user = request.user
 
       try {
-        const apiKey = await ApiKey.create({ user })
+        const apiKey = await user.createApiKey()
         reply.send({ key: apiKey.key })
       } catch (error) {
         const userError = sequelizeError(error)
@@ -37,7 +37,7 @@ async function routes(fastify, _options) {
       const user = request.user
 
       try {
-        const apiKeys = await ApiKey.findAll({ where: { user } })
+        const apiKeys = await user.getApiKeys()
         reply.send(apiKeys)
       } catch(_error) {
         reply.status(500).send({ error: 'Failed to list API keys' })
@@ -49,12 +49,13 @@ async function routes(fastify, _options) {
     { schema: DELETE_API_KEY_SCHEMA },
     async (request, reply) => {
       const { id } = request.params
+      const user = request.user
 
       try {
-        const apiKey = await ApiKey.findByPk(id)
+        const apiKey = await user.findApiKey(id)
         if (!apiKey) return reply.status(404).send({ error: 'API key not found' })
         await apiKey.destroy()
-        reply.send({ message: 'API key revoked' })
+        reply.status(204).send()
       } catch(_error) {
         reply.status(500).send({ error: 'Failed to revoke API key' })
       }

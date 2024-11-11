@@ -3,6 +3,8 @@
 const { validateQueryParams, errorResponse } = require('../../lib/requests')
 const { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } = require('../../schemas/assignment_schemas')
 
+const authenticator = require('../../middleware/authenticator')
+
 const DEFAULT_LIMIT = 10
 const MAX_LIMIT = 50
 
@@ -15,6 +17,8 @@ async function setLimitAndOffset(request, _reply) {
 async function routes(fastify, _options) {
 
   const Assignment = fastify.db.sequelize.models.Assignment
+
+  fastify.addHook('preHandler', authenticator())
 
   // Get all assignments for a user
   fastify.get(
