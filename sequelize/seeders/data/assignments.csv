@@ -1,8 +1,11 @@
 "user","assignment","image","params","user_params"
 "correctomatic","a1","registry.correctomatic.org/correction-test-1",,
-"foo","exercise1","registry.correctomatic.org/correction-test-1",,
-"foo","exercise2","registry.correctomatic.org/correction-test-1",,
-"bar","exercise1","registry.correctomatic.org/correction-test-1",,
+"user1","exercise1","registry.correctomatic.org/correction-test-1",,
+"user1","exercise2","registry.correctomatic.org/correction-test-1",,
+"user2","exercise1","registry.correctomatic.org/correction-test-1",,
+"user","params","registry.correctomatic.org/correction-test-1","correctomatic_name=from database",
+"user","user_params","registry.correctomatic.org/correction-test-1",,"correctomatic_name"
+"user","user_params_filter","registry.correctomatic.org/correction-test-1",,"a_param_not_used"
 "pagination","e1","pagination-image",,
 "pagination","e2","pagination-image",,
 "pagination","e3","pagination-image",,

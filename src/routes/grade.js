@@ -80,9 +80,9 @@ async function routes(fastify, _options) {
         const work_id = body.work_id?.value
         const assignment_id = body.assignment_id.value
         const callback = body.callback.value
-        const params = extractParams(body)
+        const userParams = extractParams(body)
 
-        logger.debug(`Job data: work_id=${work_id}, assignment_id=${assignment_id}, callback=${callback}, params=${JSON.stringify(params)}`)
+        logger.debug(`Job data: work_id=${work_id}, assignment_id=${assignment_id}, callback=${callback}, params=${JSON.stringify(userParams)}`)
 
         const image = await getImage(fastify.db, assignment_id)
         logger.debug('Container image for grading:' + image)
@@ -92,7 +92,7 @@ async function routes(fastify, _options) {
           image,
           uploadedFile,
           callback,
-          params
+          userParams
         )
 
         return reply.status(200).send({

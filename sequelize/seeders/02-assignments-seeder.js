@@ -3,25 +3,42 @@
 const path = require('path')
 const parseCSV = require('./lib/read_csv')
 
+function paramsToObject(params) {
+  if (!params) return null
+
+  const object = params.split(';').reduce((acc, param) => {
+    const [key, value] = param.split('=')
+    acc[key] = value
+    return acc
+  }, {})
+
+  return JSON.stringify(object)
+}
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
     // Load data from CSV file
-    const assignmentsData = await parseCSV(path.resolve(__dirname,'./data/assignments.csv'))
+    const assignmentsData = await parseCSV(path.resolve(__dirname, './data/assignments.csv'))
+
+    // The params field expects a text with param=value;param2=value2 format
+    // The user_params field expects a list of parameters separated by semicolons
 
     // Transform data as needed (e.g., hashing passwords for user data)
-    const assignments = await Promise.all(assignmentsData.map(async (row) => ({
-      user: row.user,
-      assignment: row.assignment,
-      image: row.image,
-      params: row.params ? row.params.split(';') : null,
-      user_params: row.user_params || null,
-      createdAt: row.createdAt || new Date(),
-      updatedAt: row.updatedAt || new Date()
-    })))
+    const assignments = await Promise.all(assignmentsData.map(async (row) => {
+      return {
+        user: row.user,
+        assignment: row.assignment,
+        image: row.image,
+        params: paramsToObject(row.params),
+        user_params: row.user_params ? row.user_params?.split(';') : null,
+        createdAt: row.createdAt || new Date(),
+        updatedAt: row.updatedAt || new Date()
+      }
+    }))
 
     // Bulk insert transformed data into the database
-    await queryInterface.bulkInsert('Assignments', assignments, {})
+    await queryInterface.bulkInsert('Assignments', assignments, {logging: console.log})
   },
 
   async down(queryInterface) {
