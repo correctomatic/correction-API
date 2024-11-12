@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     params: DataTypes.JSON,
-    user_params: DataTypes.ARRAY(DataTypes.STRING),
+    allowed_user_params: DataTypes.ARRAY(DataTypes.STRING),
   }, {
     sequelize,
     modelName: 'Assignment',

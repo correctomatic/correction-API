@@ -25,7 +25,7 @@ module.exports = {
         allowNull: true,
         type: Sequelize.JSON
       },
-      user_params: {
+      allowed_user_params: {
         allowNull: true,
         type: Sequelize.ARRAY(Sequelize.STRING), // Add the array of strings here
       },

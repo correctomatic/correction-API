@@ -18,20 +18,18 @@ function paramsToObject(params) {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
-    // Load data from CSV file
+    // Read the CSV file with the data to seed
+    // The params field expects a text with param=value;param2=value2 format
+    // The allowed_user_params field expects a list of parameters separated by semicolons
     const assignmentsData = await parseCSV(path.resolve(__dirname, './data/assignments.csv'))
 
-    // The params field expects a text with param=value;param2=value2 format
-    // The user_params field expects a list of parameters separated by semicolons
-
-    // Transform data as needed (e.g., hashing passwords for user data)
     const assignments = await Promise.all(assignmentsData.map(async (row) => {
       return {
         user: row.user,
         assignment: row.assignment,
         image: row.image,
         params: paramsToObject(row.params),
-        user_params: row.user_params ? row.user_params?.split(';') : null,
+        allowed_user_params: row.allowed_user_params ? row.allowed_user_params?.split(';') : null,
         createdAt: row.createdAt || new Date(),
         updatedAt: row.updatedAt || new Date()
       }

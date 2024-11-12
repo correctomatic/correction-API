@@ -23,18 +23,17 @@ function extractParams(fields) {
   return paramsArray.map(param => param.value)
 }
 
-function image(name, tag) { return `${name}:${tag ?? 'latest'}` }
+function dockerImage(name, tag) { return `${name}:${tag ?? 'latest'}` }
 function splitAssignmentId(assignment_id) { return assignment_id.split('/') }
 
-async function getImage(db, assignment_id) {
-  // TO-DO: this is a security risk
+async function getAssignment(db, assignment_id) {
   const [user, assignment] = splitAssignmentId(assignment_id)
   if (!user || !assignment) throw new ParamsError("Incorrect assignment_id format, must be 'user/assignment'")
 
   const assignmentInstance = await db.models.Assignment.findOne({ where: { user, assignment } })
   if (!assignmentInstance) throw new ImageError('Assignment not found')
 
-  return image(assignmentInstance.image)
+  return assignmentInstance
 }
 
 function userError(e) {
@@ -43,6 +42,9 @@ function userError(e) {
 
 function checkFileReceived(request) {
   if (request.body?.file?.type !== 'file') throw new ParamsError('file field must be a file')
+}
+
+function filterUserParams(params) {
 }
 
 async function routes(fastify, _options) {
@@ -84,7 +86,10 @@ async function routes(fastify, _options) {
 
         logger.debug(`Job data: work_id=${work_id}, assignment_id=${assignment_id}, callback=${callback}, params=${JSON.stringify(userParams)}`)
 
-        const image = await getImage(fastify.db, assignment_id)
+        const assignment = await getAssignment(fastify.db, assignment_id)
+        const image = dockerImage(assignment.image)
+        const params = assignment.params
+
         logger.debug('Container image for grading:' + image)
 
         await createCorrectionJob(

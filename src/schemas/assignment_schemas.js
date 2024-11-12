@@ -10,7 +10,7 @@ const ASSIGNMENT_SCHEMA = {
       type: 'object',
       additionalProperties: { type: 'string' }  // Accepts any key with a string value
     },
-    user_params: { type: 'array', items: { type: 'string' } }
+    allowed_user_params: { type: 'array', items: { type: 'string' } }
   },
   required: ['user', 'assignment']  // include required assignment fields
 }
@@ -37,7 +37,7 @@ const CREATE_ASSIGNMENT_REQUEST_SCHEMA = {
     assignment: { type: 'string' },
     image: { type: 'string' },
     params: { type: 'object' },
-    user_params: { type: 'array', items: { type: 'string' } }
+    allowed_user_params: { type: 'array', items: { type: 'string' } }
   },
   required: ['assignment', 'image'],
   additionalProperties: false
@@ -48,7 +48,7 @@ const UPDATE_ASSIGNMENT_REQUEST_SCHEMA = {
   properties: {
     image: { type: 'string' },
     params: { type: 'object' },
-    user_params: { type: 'array', items: { type: 'string' } }
+    allowed_user_params: { type: 'array', items: { type: 'string' } }
   },
   additionalProperties: false
 }

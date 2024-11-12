@@ -7,7 +7,6 @@ const parseCSV = require('./lib/read_csv')
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
-    // Load data from CSV file
     const usersData = await parseCSV(path.resolve(__dirname,'./data/users.csv'))
 
     // Transform data as needed (e.g., hashing passwords for user data)
@@ -19,7 +18,6 @@ module.exports = {
       updatedAt: row.updatedAt || new Date()
     })))
 
-    // Bulk insert transformed data into the database
     await queryInterface.bulkInsert('Users', users, {})
   },
 

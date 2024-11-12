@@ -30,7 +30,7 @@ async function routes(fastify, _options) {
     { schema: CREATE_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
       const { user } = request
-      const { assignment, image, params, user_params } = request.body
+      const { assignment, image, params, allowed_user_params } = request.body
 
       try {
         const newAssignment = await Assignment.create({
@@ -38,7 +38,7 @@ async function routes(fastify, _options) {
           assignment,
           image,
           params,
-          user_params
+          allowed_user_params
         })
 
         return reply.status(201).send(successResponse(newAssignment))
@@ -53,7 +53,7 @@ async function routes(fastify, _options) {
     { schema: UPDATE_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
       const { user, assignment } = request.params
-      const { image, params, user_params } = request.body
+      const { image, params, allowed_user_params } = request.body
 
       try {
 
@@ -65,7 +65,7 @@ async function routes(fastify, _options) {
           return reply.status(404).send(errorResponse('Assignment not found'))
         }
 
-        await theAssignment.update({ image, params, user_params })
+        await theAssignment.update({ image, params, allowed_user_params })
         return reply.send(successResponse(theAssignment))
 
       } catch (error) {
