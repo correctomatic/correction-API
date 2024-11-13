@@ -11,16 +11,19 @@ function validateParams(params) {
   }
 }
 
-async function createCorrectionJob(work_id, image, uploadedFile, callback, params) {
+// Docker expects environment variables as an array of strings in the form 'KEY=VALUE' 
+function paramsToArray(params) {
+  return Object.entries(params).map(([key, value]) => `${key}=${value}`)
+}
 
-  validateParams(params)
+async function createCorrectionJob(work_id, image, uploadedFile, callback, params) {
 
   const message = {
     work_id,
     image,
     file: uploadedFile,
     callback,
-    params
+    params: paramsToArray(params)
   }
 
   logger.debug('Enqueuing work for grading:' + JSON.stringify(message))

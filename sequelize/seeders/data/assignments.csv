@@ -3,7 +3,8 @@
 "user1","exercise1","registry.correctomatic.org/correction-test-1",,
 "user1","exercise2","registry.correctomatic.org/correction-test-1",,
 "user2","exercise1","registry.correctomatic.org/correction-test-1",,
-"user","params","registry.correctomatic.org/correction-test-1","correctomatic_name=from database",
+"user","db_params","registry.correctomatic.org/correction-test-1","correctomatic_param_1=from database",
+"user","full_params","registry.correctomatic.org/correction-test-1","correctomatic_param_1=from database","correctomatic_param_2"
 "user","allowed_user_params","registry.correctomatic.org/correction-test-1",,"correctomatic_name"
 "user","allowed_user_params_filter","registry.correctomatic.org/correction-test-1",,"a_param_not_used"
 "pagination","e1","pagination-image",,
