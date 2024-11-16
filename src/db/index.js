@@ -3,10 +3,9 @@
 const fs = require('fs')
 const path = require('path')
 const Sequelize = require('sequelize')
-const process = require('process')
 const basename = path.basename(__filename)
-const env = process.env.NODE_ENV || 'development'
-const appConfig = require(__dirname + '/../../sequelize/config.js')[env]
+const env = require(__dirname + '/../config/env.js')
+const appConfig = require(__dirname + '/../../sequelize/config.js')[env.ENVIRONMENT]
 
 function initSequelize(extraConfig) {
   const db = {}
@@ -16,11 +15,7 @@ function initSequelize(extraConfig) {
     ...extraConfig
   }
 
-  if (config.use_env_variable) {
-    sequelize = new Sequelize(process.env[config.use_env_variable], config)
-  } else {
-    sequelize = new Sequelize(config.database, config.username, config.password, config)
-  }
+  sequelize = new Sequelize(config.database, config.username, config.password, config)
 
   const modelsDirectory = path.join(__dirname, 'models')
   fs
