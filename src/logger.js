@@ -1,5 +1,5 @@
-import pino from 'pino'
-import env from './config/env.js'
+const pino = require('pino')
+const env = require('./config/env')
 
 const environment = env.ENVIRONMENT
 const logLevel = env.log.LOG_LEVEL
@@ -34,4 +34,4 @@ const logger = pino({
   level: logLevel,
 },transport)
 
-export default logger
+module.exports = logger

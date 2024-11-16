@@ -1,34 +1,75 @@
-import env from './config/env.js'
-import { join } from 'node:path'
+const env = require('./config/env')
+const { join } = require('path')
+require('module-alias/register')
 
-import Fastify from 'fastify'
-import AutoLoad from '@fastify/autoload'
-import fastifyCors from '@fastify/cors'
-import fastifySwagger from "@fastify/swagger"
-import fastifySwaggerUi from "@fastify/swagger-ui"
-import multipart from '@fastify/multipart'
-import { swaggerOptions, swaggerUiOptions } from './swagger.js'
+const Fastify = require('fastify')
+const AutoLoad = require('@fastify/autoload')
+const fastifyCors = require('@fastify/cors')
+const fastifySwagger = require('@fastify/swagger')
+const fastifySwaggerUi = require('@fastify/swagger-ui')
+const multipart = require('@fastify/multipart')
+const { swaggerOptions, swaggerUiOptions } = require('./swagger')
+const fs = require('fs')
+const os = require('os')
+const path = require('path')
+const { pipeline } = require('stream/promises')
 
-import logger from './logger.js'
-import { scriptDir } from './lib/utils.js'
+const logger = require('./logger')
+const dbConnector = require('./plugins/sequelize')
 
 const PORT = env.PORT
 
 const fastify = Fastify({
-  logger
+  logger,
+  ajv: {
+    customOptions: { allErrors: true, strict: false, removeAdditional: false, },
+    plugins: [
+      [require('ajv-errors')]
+    ]
+  }
 })
+
+// This function is called for each file in the multipart form, will write
+// the file to a temporary location so it don't be stored in memory
+// The name of the file will be available in the request as `file`
+async function onFile(part) {
+  const req = this // you have access to original request via `this`
+
+  const tempFilename = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}-${part.filename}`
+  const tempFilePath = path.join(os.tmpdir(), tempFilename)
+
+  req.file = tempFilePath
+  await pipeline(part.file, fs.createWriteStream(tempFilePath))
+}
 
 fastify.register(fastifySwagger, swaggerOptions)
 fastify.register(fastifySwaggerUi, swaggerUiOptions)
 fastify.register(fastifyCors, { origin: '*' })
-fastify.register(multipart)
+fastify.register(multipart, { attachFieldsToBody: true, onFile })
 
 // Run the server!
 try {
-  const currentDir = scriptDir(import.meta)
-  fastify.register(AutoLoad, {
-    dir: join(currentDir, 'routes'),
+
+  fastify.setErrorHandler((error, _request, reply) => {
+    fastify.log.error(error)
+    reply.status(400).send({
+      success: false,
+      message: error.message || 'An unexpected error occurred'
+    })
   })
+
+  fastify.register(dbConnector, { logging: (msg) => logger.info(msg) })
+
+  // Routes MUST be loaded after the dbConnector plugin
+  fastify.register(AutoLoad, {
+    dir: join(__dirname, 'routes'),
+  })
+
+  // Uncomment this to print the routes to the console
+  // fastify.ready(err => {
+  //   if (err) throw err
+  //   console.log(fastify.printRoutes())
+  // })
 
   fastify.listen({ port: PORT, host: '0.0.0.0' })
 

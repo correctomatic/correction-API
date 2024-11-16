@@ -1,0 +1,35 @@
+services:
+
+  redis:
+    image: redis:7
+    # Sets the password for the redis server and
+    # enables the appendonly mode
+    command: bash -c "redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}"
+    ports:
+      - "6379:6379"
+
+  db:
+    image: postgres:16.3
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  # test_db:
+  #   image: postgres:16.3
+  #   ports:
+  #     - "54321:5432"
+  #   environment:
+  #     POSTGRES_USER: correctomatic_test
+  #     POSTGRES_PASSWORD: correctomatic_test
+  #     POSTGRES_DB: correctomatic_test
+  #   volumes:
+  #     - postgres-test-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+  postgres-test-data:

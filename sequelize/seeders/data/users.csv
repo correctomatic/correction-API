@@ -1,0 +1,7 @@
+user,password,roles
+admin,admin,admin;otherrole
+correctomatic,correctomatic_pass,
+pagination,pagination,
+user,pass,
+user1,pass1,
+user2,pass2,admin

@@ -1,4 +1,4 @@
-import dotenv from 'dotenv'
+const dotenv = require('dotenv')
 dotenv.config()
 
 const DEFAULT_PORT = 3000
@@ -25,7 +25,7 @@ const redisConfig = {
   password: process.env.REDIS_PASSWORD || REDIS_DEFAULTS.password,
 }
 
-export default {
+module.exports = {
   ENVIRONMENT: process.env.NODE_ENV || DEFAULT_ENVIRONMENT,
   PORT: process.env.PORT || DEFAULT_PORT,
 
@@ -41,5 +41,17 @@ export default {
     }
   },
 
-  UPLOAD_DIRECTORY: process.env.UPLOAD_DIRECTORY || DEFAULT_UPLOAD_DIRECTORY
+  db: {
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+  },
+
+  UPLOAD_DIRECTORY: process.env.UPLOAD_DIRECTORY || DEFAULT_UPLOAD_DIRECTORY,
+
+  jwt: {
+    secretKey: process.env.JWT_SECRET_KEY,
+    expiration: process.env.JWT_EXPIRES_IN || '1h',
+  },
 }

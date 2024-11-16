@@ -1,84 +1,24 @@
-import fs from 'fs'
-import path from 'path'
-import env from '../config/env.js'
+const env = require('../config/env')
+const logger = require('../logger')
+const { GRADE_SCHEMA } = require('../schemas/grade_schemas')
 
-import logger from '../logger.js'
-// TO-DO: Schemas are not working for multipart forms
-// import { GRADE_SCHEMA } from '../schemas/grade_schemas.js'
+const authenticator = require('../middleware/authenticator')
 
-import { ensureDirectoryExists } from '../lib/utils.js'
-import { putInPendingQueue } from '../lib/bullmq.js'
+const { ensureDirectoryExists, moveToUploadsDir } = require('../lib/utils')
+const { createCorrectionJob } = require('../lib/correctomatic')
+const { ParamsError, ImageError } = require('../lib/errors')
+const { errorResponse } = require('../lib/requests')
 
 const UPLOAD_DIRECTORY = env.UPLOAD_DIRECTORY
-
 
 // Module initialization
 ensureDirectoryExists(UPLOAD_DIRECTORY)
 
-function image(name, tag) { return `${name}:${tag ?? 'latest'}` }
-
-class ParamsError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'ParamsError';
-  }
-}
-
-async function writeFileToDisk(data) {
-  const uploadedFile = path.join(UPLOAD_DIRECTORY, `${Date.now()}-${data.filename}`)
-  await fs.promises.writeFile(uploadedFile, data.file)
-  return uploadedFile
-}
-
-function checkFile(_req, reply, data) {
-  if (!data) {
-    reply.code(400).send({
-      success: false,
-      message: 'No file received',
-    })
-    return false
-  }
-  return true
-}
-
-function safeGetField(fields, name) {
-  return fields[name]?.value
-}
-
-function checkFields(_req, reply, fields) {
-  const assignment_id = safeGetField(fields, 'assignment_id')
-  const callback = safeGetField(fields, 'callback')
-  if (!assignment_id || !callback) {
-    reply.code(400).send({
-      success: false,
-      message: `Missing required fields:${!assignment_id ? ' assignment_id' : ''}${!callback ? ' callback' : ''}`
-    })
-    return false
-  }
-  return true
-}
-
-async function preValidateGrade(req, reply) {
-  try {
-    const data = await req.file()
-    if (!checkFile(req, reply, data)) return
-    req.fileData = data
-    // We can't validate the fields here because the file must be read first
-  } catch (_error) {
-    reply.code(400).send({
-      success: false,
-      message: 'Invalid file data',
-    })
-  }
-}
-
-// Params must be in the format VAR_NAME=something
-const paramRegex = /^[a-zA-Z_][a-zA-Z0-9_]*=.+$/
-const isValidParam = (param) => paramRegex.test(param)
-function validateParams(params) {
-  for (const param of params) {
-    if (!isValidParam(param)) throw new ParamsError(`Invalid param format: ${param}`)
-  }
+function addParamValue(acc, param) {
+  const [name, value] = param.value.split('=')
+  if (!name || !value) throw new ParamsError(`Invalid param format: ${param}`)
+  acc[name] = value
+  return acc
 }
 
 function extractParams(fields) {
@@ -86,8 +26,41 @@ function extractParams(fields) {
   if (!param) return []
 
   // When there is a single param it's a field, when there are multiple it's an array of fields
-  const paramsArray = Array.isArray(param) ? param : [param];
-  return paramsArray.map(param => param.value)
+  const paramsArray = Array.isArray(param) ? param : [param]
+  return paramsArray.reduce(addParamValue, {})
+}
+
+function dockerImage(name, tag) { return `${name}:${tag ?? 'latest'}` }
+function splitAssignmentId(assignment_id) { return assignment_id.split('/') }
+
+async function getAssignment(db, assignment_id) {
+  const [user, assignment] = splitAssignmentId(assignment_id)
+  if (!user || !assignment) throw new ParamsError("Incorrect assignment_id format, must be 'user/assignment'")
+
+  const assignmentInstance = await db.models.Assignment.findOne({ where: { user, assignment } })
+  if (!assignmentInstance) throw new ImageError('Assignment not found')
+
+  return assignmentInstance
+}
+
+function userError(e) {
+  return (e instanceof ParamsError) || (e instanceof ImageError)
+}
+
+function checkFileReceived(request) {
+  if (request.body?.file?.type !== 'file') throw new ParamsError('file field must be a file')
+}
+
+function filterUserParams(allowed, params) {
+  const filteredParams = {};
+
+  for (const key in params) {
+    if (allowed.includes(key)) {
+      filteredParams[key] = params[key];
+    }
+  }
+
+  return filteredParams;
 }
 
 async function routes(fastify, _options) {
@@ -96,7 +69,7 @@ async function routes(fastify, _options) {
 
   // Expected parameters:
   // - work_id: caller's id of the exercise
-  // - assignment_id: assignment id of the exercise. This is for computing the docker image for the correction
+  // - assignment_id: assignment id of the exercise, with format "user/assignment"
   // - file: file with the exercise
   // - callback: URL to call with the results
   // - params: list of parameters to pass to the correction script
@@ -105,74 +78,67 @@ async function routes(fastify, _options) {
   // - success: boolean
   // - message: string ('Work enqueued for grading' or 'Error grading work')
 
+  fastify.addHook('preHandler', authenticator())
+
   fastify.post(
     '/grade',
-    // TO-DO: this generates "body must be object" error
-    // { schema: GRADE_SCHEMA },
-    { preValidation: preValidateGrade },
+    {
+      schema: GRADE_SCHEMA
+    },
     async (req, reply) => {
 
       try {
-        const data = req.fileData
+        checkFileReceived(req)
 
         logger.debug('Received file for grading')
-        const uploadedFile = await writeFileToDisk(data)
+        const uploadedFile = await moveToUploadsDir(UPLOAD_DIRECTORY, req.file)
         logger.debug('File saved to disk:' + uploadedFile)
 
-        // This MUST be after reading the file
-        if (!checkFields(req, reply, data.fields)) return
-        const work_id = data.fields.work_id.value
-        const assignment_id = data.fields.assignment_id.value
-        const callback = data.fields.callback.value
-        const params = extractParams(data.fields)
+        const body = req.body
+        const work_id = body.work_id?.value
+        const assignment_id = body.assignment_id.value
+        const callback = body.callback.value
+        const assignment = await getAssignment(fastify.db, assignment_id)
+        const userParams = extractParams(body)
 
-        validateParams(params)
+        logger.debug(`Job data: work_id=${work_id}, assignment_id=${assignment_id}, callback=${callback}, params=${JSON.stringify(userParams)}`)
 
-        logger.debug(`Job data: work_id=${work_id}, assignment_id=${assignment_id}, callback=${callback}, params=${JSON.stringify(params)}`)
+        const image = dockerImage(assignment.image)
+        const assignmentParams = assignment.params
+        const filteredUserParams = filterUserParams(assignment.allowed_user_params, userParams)
+        const params = { ...assignmentParams, ...filteredUserParams }
 
-        // TODO: need a list of exercises / images
-        // At the moment we use assignment_id, but this is a security risk
-        // const containerImage = image('correction-test-1')
-        const containerImage = image(assignment_id)
-        logger.debug('Container image for grading:' + containerImage)
+        logger.debug('Container image for grading:' + image)
 
-        // Put the mensage in the queue
-        const message = {
+        await createCorrectionJob(
           work_id,
-          image: containerImage,
-          file: uploadedFile,
+          image,
+          uploadedFile,
           callback,
           params
-        }
+        )
 
-        logger.debug('Enqueuing work for grading:' + JSON.stringify(message))
-        await putInPendingQueue(message)
-        logger.info('Work enqueued for grading:' + JSON.stringify(message))
-
-        return {
+        return reply.status(200).send({
           success: true,
           message: 'Work enqueued for grading'
-        }
+        })
+
       } catch (e) {
-        logger.error('Error grading work:' + JSON.stringify(e.message))
-        let message = 'Error grading work'
 
-        // We show the error message when it is a ParamsError, because is something
-        // that the caller can fix
-        if (e instanceof ParamsError) {
-          message = e.message
+        // We only want to show user errors, not internal errors
+        if (userError(e)) {
+          logger.error('User error grading work:' + JSON.stringify(e.message))
+          return reply.status(400).send(errorResponse(e.message))
         }
 
-        return {
-          success: false,
-          message
-        }
+        logger.error('Internal error grading work:' + JSON.stringify(e.message))
+        return reply.status(500).send(errorResponse('Error grading work'))
       }
     }
   )
 }
 
-export default routes
+module.exports = routes
 
 
 
