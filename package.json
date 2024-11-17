@@ -11,7 +11,7 @@
     "dev": "nodemon ./src/index.js | npx pino-pretty",
     "lint": "eslint ./src",
     "test": "jest",
-    "migrate": "sequelize db:migrate"
+    "migrate": "npx sequelize-cli db:migrate"
   },
   "_moduleAliases": {
     "@db": "src/db",
@@ -34,7 +34,7 @@
     "pino": "^8.20.0",
     "pundit": "^0.3.0",
     "sequelize": "^6.37.5",
-    "sqlite3": "^5.1.7"
+    "sequelize-cli": "^6.6.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.2.0",
@@ -43,7 +43,6 @@
     "jest": "^29.7.0",
     "module-alias-jest": "^0.0.3",
     "nodemon": "^3.1.0",
-    "pino-pretty": "^11.0.0",
-    "sequelize-cli": "^6.6.2"
+    "pino-pretty": "^11.0.0"
   }
 }
