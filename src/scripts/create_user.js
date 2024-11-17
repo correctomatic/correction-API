@@ -1,4 +1,4 @@
-const initDB = require('./db/index.js')
+const initDB = require('../db/index.js')
 const db = initDB()
 
 async function getUser(user) {

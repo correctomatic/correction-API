@@ -11,7 +11,8 @@
     "dev": "nodemon ./src/index.js | npx pino-pretty",
     "lint": "eslint ./src",
     "test": "jest",
-    "migrate": "npx sequelize-cli db:migrate"
+    "migrate": "npx sequelize-cli db:migrate",
+    "create-root-user": "node ./src/scripts/create_user.js ${ROOT_USER:-root} ${ROOT_PASSWORD:-root} root"
   },
   "_moduleAliases": {
     "@db": "src/db",
