@@ -10,7 +10,8 @@
     "start": "node ./src/index.js",
     "dev": "nodemon ./src/index.js | npx pino-pretty",
     "lint": "eslint ./src",
-    "test": "jest"
+    "test": "jest",
+    "migrate": "sequelize db:migrate"
   },
   "_moduleAliases": {
     "@db": "src/db",

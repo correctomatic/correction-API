@@ -4,11 +4,9 @@ Work in progress. Pending:
 - Security roles
 - Use a more flexible system for sharing the exercises with the correctomatic processes
 
-This API is the entry point for launching corrections. It provides and endpoint, `/grade`, that will upload the file
-to a shared folder and use BullMQ to create a correction task.
+This API is the entry point for managing the corrections. It provides and endpoint, `/grade`, that will upload the file to a shared folder and use BullMQ to create a correction task. It also provides endpoints for managing the assignments, the users and the API keys.
 
-Be careful, currently there is no security implemented: if someone has access to the API can run arbitrary containers
-in the server.
+API's swagger documentation is available in the `/docs` endpoint.
 
 ## Authentication
 
@@ -158,6 +156,20 @@ UPLOAD_DIRECTORY=/tmp
 ```
 
 The log level can also be configured for debuggin purposes. The `QUEUE_NAME` is standard, you should'nt modify it.
+
+## Deployment
+
+There is a proyect for building a docker image for the API: [correctomatic-api](https://github.com/correctomatic/API-image). You can use it to deploy the API. The image is available in the [Docker Hub](https://hub.docker.com/r/correctomatic/api).
+
+For the first run you will need to migrate the database. You can do it running the following command in the host  or container:
+```sh
+yarn migrate
+```
+
+There is a `create_user.js` script that will create a user with the provided credentials; you can use it to create the first user. Run it with the following command:
+```sh
+node create_user.js <user> <password> <role1,role2,...>
+```
 
 ## Development
 
