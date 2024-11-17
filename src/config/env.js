@@ -16,7 +16,34 @@ const REDIS_DEFAULTS = {
   user: 'default',
   password: '',
 }
+
+const DB_DEFAULTS = {
+  DB_HOST: 'localhost',
+  DB_NAME: 'correctomatic',
+  DB_PORT: 5432
+}
+
 const PENDING_QUEUE = 'pending_corrections'
+
+
+function validateEnv(requiredEnvKeys) {
+  const missingKeys = requiredEnvKeys.filter(key => {
+    const value = process.env[key]
+    return value === undefined || value === null || value.trim() === ''
+  })
+
+  if (missingKeys.length > 0) {
+    throw new Error(`The following environment variables are missing or empty: ${missingKeys.join(', ')}`)
+  }
+}
+
+const REQUIRED_ENV_KEYS = [
+  'DB_USER',
+  'DB_PASSWORD',
+  'JWT_SECRET_KEY',
+]
+
+validateEnv(REQUIRED_ENV_KEYS)
 
 const redisConfig = {
   host: process.env.REDIS_HOST || REDIS_DEFAULTS.host,
@@ -42,8 +69,9 @@ module.exports = {
   },
 
   db: {
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
+    host: process.env.DB_HOST || DB_DEFAULTS.host,
+    port: process.env.DB_PORT || DB_DEFAULTS.port,
+    database: process.env.DB_NAME || DB_DEFAULTS.database,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
   },

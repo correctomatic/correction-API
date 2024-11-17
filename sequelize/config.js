@@ -1,12 +1,12 @@
-require('dotenv').config()
+const env = require('../src/config/env')
 
 const config = {
   development: {
-    username: process.env.DB_USER || 'correctomatic',
-    password: process.env.DB_PASSWORD || 'correctomatic',
-    database: process.env.DB_NAME || 'correctomatic',
-    host: process.env.DB_HOST || '127.0.0.1',
-    port: process.env.DB_PORT || 5432,
+    username: env.db.username,
+    password: env.db.password,
+    database: env.db.name,
+    host: env.db.host,
+    port: env.db.port,
     dialect: 'postgres',
     // logging: true,
   },
@@ -20,12 +20,13 @@ const config = {
     logging: false,
   },
   production: {
-    username: process.env.DB_USER || 'correctomatic',
-    password: process.env.DB_PASSWORD || 'correctomatic',
-    database: process.env.DB_NAME || 'correctomatic',
-    host: process.env.DB_HOST || '127.0.0.1',
-    port: process.env.DB_PORT || 5432,
+    username: env.db.username,
+    password: env.db.password,
+    database: env.db.name,
+    host: env.db.host,
+    port: env.db.port,
     dialect: 'postgres',
+    // logging: true,
   },
 }
 
