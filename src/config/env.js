@@ -18,9 +18,9 @@ const REDIS_DEFAULTS = {
 }
 
 const DB_DEFAULTS = {
-  DB_HOST: 'localhost',
-  DB_NAME: 'correctomatic',
-  DB_PORT: 5432
+  db_name: 'correctomatic',
+  host: 'localhost',
+  port: 5432
 }
 
 const PENDING_QUEUE = 'pending_corrections'
@@ -71,7 +71,7 @@ module.exports = {
   db: {
     host: process.env.DB_HOST || DB_DEFAULTS.host,
     port: process.env.DB_PORT || DB_DEFAULTS.port,
-    database: process.env.DB_NAME || DB_DEFAULTS.database,
+    database: process.env.DB_NAME || DB_DEFAULTS.db_name,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
   },

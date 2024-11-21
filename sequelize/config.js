@@ -4,7 +4,7 @@ const config = {
   development: {
     username: env.db.username,
     password: env.db.password,
-    database: env.db.name,
+    database: env.db.database,
     host: env.db.host,
     port: env.db.port,
     dialect: 'postgres',
@@ -22,7 +22,7 @@ const config = {
   production: {
     username: env.db.username,
     password: env.db.password,
-    database: env.db.name,
+    database: env.db.database,
     host: env.db.host,
     port: env.db.port,
     dialect: 'postgres',
