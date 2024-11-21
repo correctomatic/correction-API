@@ -71,7 +71,28 @@ try {
   //   console.log(fastify.printRoutes())
   // })
 
-  fastify.listen({ port: PORT, host: '0.0.0.0' })
+  const startServer = async () => {
+    await fastify.listen({ port: PORT, host: '0.0.0.0' })
+    fastify.log.info(`Server running on port ${PORT}`)
+  }
+
+  // Graceful shutdown handling
+  const shutdown = async () => {
+    try {
+      fastify.log.info('Shutdown signal received. Closing server...')
+      await fastify.close()
+      fastify.log.info('Server closed.')
+      process.exit(0)
+    } catch (err) {
+      fastify.log.error('Error during shutdown:', err)
+      process.exit(1)
+    }
+  }
+
+  process.on('SIGTERM', shutdown)
+  process.on('SIGINT', shutdown)
+
+  startServer()
 
   // Export documentation to yml. Uncomment this and the fs import at the
   // top of the file to generate the yaml
