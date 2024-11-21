@@ -166,9 +166,14 @@ For the first run you will need to migrate the database. You can do it running t
 yarn migrate
 ```
 
-There is a `create_user.js` script that will create a user with the provided credentials; you can use it to create the first user. Run it with the following command:
+For creating the first user you can use the yarn script `create-root-user`. You can run it with the following command:
 ```sh
-node create_user.js <user> <password> <role1,role2,...>
+ROOT_USER=root ROOT_PASSWORD=$MI_ROOT_PASSWORD yarn create-root-user
+```
+
+There is also a `create_user.js` script that will create a user with the provided credentials. Run it with the following command:
+```sh
+node src/scripts/create_user.js <user> <password> <role1,role2,...>
 ```
 
 ## Development

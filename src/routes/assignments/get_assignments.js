@@ -1,5 +1,6 @@
 'use strict'
 
+const logger = require('../../logger')
 const { validateQueryParams, errorResponse } = require('../../lib/requests')
 const { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } = require('../../schemas/assignment_schemas')
 
@@ -33,7 +34,7 @@ async function routes(fastify, _options) {
         const assignments = await Assignment.findAll({ limit, offset })
         return reply.send(assignments)
       } catch (error) {
-        console.error(error)
+        logger.error(error)
         return reply.status(500).send(errorResponse('Internal server error'))
       }
     })
@@ -55,7 +56,7 @@ async function routes(fastify, _options) {
 
         return reply.send(assignments)
       } catch (error) {
-        console.error(error)
+        logger.error(error)
         return reply.status(500).send(errorResponse('Internal server error'))
       }
     })
@@ -80,7 +81,7 @@ async function routes(fastify, _options) {
         }
         return reply.send(theAssignment)
       } catch (error) {
-        console.error(error)
+        logger.error(error)
         return reply.status(500).send(errorResponse('Internal server error'))
       }
     })
