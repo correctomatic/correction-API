@@ -55,7 +55,7 @@ function filterUserParams(allowed, params) {
   const filteredParams = {};
 
   for (const key in params) {
-    if (allowed.includes(key)) {
+    if (allowed?.includes(key)) {
       filteredParams[key] = params[key];
     }
   }
