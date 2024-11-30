@@ -10,8 +10,6 @@ const { sequelizeError } = require('../lib/errors')
 
 async function routes(fastify, _options) {
 
-  const ApiKey = fastify.db.sequelize.models.ApiKey
-
   fastify.addHook('preHandler', authenticator('bearer'))
 
   fastify.post(

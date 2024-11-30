@@ -1,7 +1,6 @@
 'use strict'
 
 const path = require('path')
-const bcrypt = require('bcrypt')
 const parseCSV = require('./lib/read_csv')
 
 /** @type {import('sequelize-cli').Migration} */
