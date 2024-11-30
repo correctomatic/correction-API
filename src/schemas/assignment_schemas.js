@@ -116,9 +116,8 @@ const CREATE_ASSIGNMENT_SCHEMA = {
   }
 }
 
-const UPDATE_ASSIGNMENT_SCHEMA = {
+const UPDATE_ASSIGNMENT_BASE_SCHEMA = {
   tags: ["Assignments Management"],
-  summary: "Update Assignment",
   body: UPDATE_ASSIGNMENT_REQUEST_SCHEMA,
   response: {
     200: {
@@ -136,9 +135,21 @@ const UPDATE_ASSIGNMENT_SCHEMA = {
   }
 }
 
-const DELETE_ASSIGNMENT_SCHEMA = {
+const UPDATE_OWN_ASSIGNMENT_SCHEMA = {
+  summary: "Update own Assignment",
+  description: "Update an assignment for the current user.",
+  ...UPDATE_ASSIGNMENT_BASE_SCHEMA,
+}
+
+const UPDATE_FOREIGN_ASSIGNMENT_SCHEMA = {
+  summary: "Update another's user Assignment",
+  description: "Update an assignment for a different user (admin only).",
+  ...UPDATE_ASSIGNMENT_BASE_SCHEMA,
+}
+
+
+const DELETE_ASSIGNMENT_BASE_SCHEMA = {
   tags: ["Assignments Management"],
-  summary: "Delete Assignment",
   response: {
     204: {
       description: 'Successfully deleted the assignment.',
@@ -155,10 +166,26 @@ const DELETE_ASSIGNMENT_SCHEMA = {
   }
 }
 
+const DELETE_OWN_ASSIGNMENT_SCHEMA = {
+  summary: "Delete own Assignment",
+  description: "Delete an assignment for the current user.",
+  ...DELETE_ASSIGNMENT_BASE_SCHEMA,
+}
+
+const DELETE_FOREIGN_ASSIGNMENT_SCHEMA = {
+  summary: "Delete another's user Assignment",
+  description: "Delete an assignment for a different user (admin only).",
+  ...DELETE_ASSIGNMENT_BASE_SCHEMA,
+}
+
+
+
 module.exports = {
   GET_ASSIGNMENT_SCHEMA,
   GET_ASSIGNMENTS_SCHEMA,
   CREATE_ASSIGNMENT_SCHEMA,
-  UPDATE_ASSIGNMENT_SCHEMA,
-  DELETE_ASSIGNMENT_SCHEMA
+  UPDATE_OWN_ASSIGNMENT_SCHEMA,
+  UPDATE_FOREIGN_ASSIGNMENT_SCHEMA,
+  DELETE_OWN_ASSIGNMENT_SCHEMA,
+  DELETE_FOREIGN_ASSIGNMENT_SCHEMA
 }

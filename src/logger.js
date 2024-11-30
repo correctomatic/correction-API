@@ -5,7 +5,7 @@ const environment = env.ENVIRONMENT
 const logLevel = env.log.LOG_LEVEL
 const logFile = env.log.LOG_FILE
 
-targets = [
+let targets = [
   {
     level: logLevel,
     target: 'pino/file',
