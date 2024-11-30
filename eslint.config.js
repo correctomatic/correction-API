@@ -84,16 +84,13 @@ module.exports = [
       'use-isnan': 'error',
       'valid-typeof': 'error',
     },
-    overrides: [
-      {
-        // Only apply to test files
-        files: ['test/**/*.js'],
-        languageOptions: {
-          globals: {
-            myVariable: 'db'  // Global database variable
-          }
-        }
+  },
+  {
+    files: ['test/**/*.js'],
+    languageOptions: {
+      globals: {
+        db: 'readonly'  // Global database variable
       }
-    ]
+    }
   }
 ]
