@@ -12,18 +12,20 @@ const {
 
 const { errorResponse } = require('../../lib/requests')
 const { handleSequelizeError } = require('../../lib/errors')
-const { AssignmentPolicy } = require('../../policies/assignment_policy.js')
+const AssignmentPolicy = require('../../policies/assignment_policy.js')
+const { userNameToUser } = require('../../lib/utils')
 
 function successResponse(assignment) {
   return {
     success: true,
-    assignment: assignment.toJSON()
+    assignment: userNameToUser(assignment)
   }
 }
 
 async function routes(fastify, _options) {
 
   const Assignment = fastify.db.sequelize.models.Assignment
+  const User = fastify.db.sequelize.models.User
 
   fastify.addHook('preHandler', authenticator())
 
@@ -76,24 +78,23 @@ async function routes(fastify, _options) {
       }
     })
 
-  // Update an existing assignment for the current user
-  fastify.put(
-    '/:assignment',
-    { schema: UPDATE_OWN_ASSIGNMENT_SCHEMA },
-    async (request, reply) => {
-
-      throw new Error('Not implemented')
-      const { user, assignment } = request.params
+    async function updateAssignment(username, request, reply) {
+      const { assignment } = request.params
       const { image, params, allowed_user_params } = request.body
 
       try {
 
         const theAssignment = await Assignment.findOne({
-          where: { user, assignment }
+          where: { username: username, assignment }
         })
 
         if (!theAssignment) {
           return reply.status(404).send(errorResponse('Assignment not found'))
+        }
+
+        const assignmentPolicy = new AssignmentPolicy(request.user, theAssignment)
+        if (!assignmentPolicy.can('edit')) {
+          return reply.status(403).send(errorResponse('You are not authorized to edit this assignment'))
         }
 
         await theAssignment.update({ image, params, allowed_user_params })
@@ -102,6 +103,15 @@ async function routes(fastify, _options) {
       } catch (error) {
         handleSequelizeError(error, reply, 'Error updating assignment')
       }
+    }
+
+  // Update an existing assignment for the current user
+  fastify.put(
+    '/:assignment',
+    { schema: UPDATE_OWN_ASSIGNMENT_SCHEMA },
+    async (request, reply) => {
+      const { user } = request
+      return updateAssignment(user.username, request, reply)
     })
 
   // Update an existing assignment for a different user (admin only)
@@ -109,25 +119,8 @@ async function routes(fastify, _options) {
     '/:user/:assignment',
     { schema: UPDATE_FOREIGN_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
-      const { user, assignment } = request.params
-      const { image, params, allowed_user_params } = request.body
-
-      try {
-
-        const theAssignment = await Assignment.findOne({
-          where: { user, assignment }
-        })
-
-        if (!theAssignment) {
-          return reply.status(404).send(errorResponse('Assignment not found'))
-        }
-
-        await theAssignment.update({ image, params, allowed_user_params })
-        return reply.send(successResponse(theAssignment))
-
-      } catch (error) {
-        handleSequelizeError(error, reply, 'Error updating assignment')
-      }
+      const { user:username } = request.params
+      return updateAssignment(username, request, reply)
     })
 
   // Delete an assignment for the current user

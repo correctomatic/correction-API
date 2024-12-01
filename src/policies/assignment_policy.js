@@ -1,4 +1,4 @@
-import { Policy } from 'pundit'
+const Policy = require('./policy.js')
 
 class AssignmentPolicy extends Policy {
   constructor(user, assignment) {
@@ -6,18 +6,22 @@ class AssignmentPolicy extends Policy {
     this.setup.apply(this)
   }
 
-  create() {
-    const userIsAdmin = this.user.isAdmin
-    const userIsOwner = this.user.username === this.assignment.username
+  #adminOrOwner() {
+    const userIsAdmin = this.user.roles?.includes('admin')
+    const userIsOwner = this.user.username === this.record.username
     return userIsOwner || userIsAdmin
   }
 
+  create() {
+    return this.#adminOrOwner()
+  }
+
   edit() {
-    return this.user.id === this.record.userId
+    return this.#adminOrOwner()
   }
 
   destroy() {
-    return this.edit()
+    return this.#adminOrOwner()
   }
 }
 
