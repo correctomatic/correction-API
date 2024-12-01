@@ -9,11 +9,11 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
       },
-      user: {
+      username: {
         type: Sequelize.STRING,
         references: {
           model: 'Users', // Assumes a Users table exists with a primary key 'user'
-          key: 'user'
+          key: 'username'
         },
         allowNull: false,
         validate: {
@@ -37,7 +37,7 @@ module.exports = {
     // Add check constraints to enforce non-empty strings
     await queryInterface.sequelize.query(`
       ALTER TABLE "ApiKeys"
-      ADD CONSTRAINT user_not_empty CHECK (user <> '')
+      ADD CONSTRAINT username_not_empty CHECK (username <> '')
     `)
 
   },

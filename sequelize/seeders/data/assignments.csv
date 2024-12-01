@@ -1,4 +1,4 @@
-"user","assignment","image","params","allowed_user_params"
+"username","assignment","image","params","allowed_user_params"
 "correctomatic","a1","registry.correctomatic.org/correction-test-1",,
 "user1","exercise1","registry.correctomatic.org/correction-test-1",,
 "user1","exercise2","registry.correctomatic.org/correction-test-1",,

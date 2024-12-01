@@ -17,7 +17,7 @@ const LIST_API_KEYS_RESPONSE_SCHEMA = {
       key: { type: 'string', description: 'Generated API key' },
       createdAt: { type: 'string', format: 'date-time', description: 'Creation date of the key' }
     },
-    required: ['key', 'user', 'createdAt']
+    required: ['key', 'createdAt']
   }
 }
 

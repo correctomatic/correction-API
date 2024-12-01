@@ -3,11 +3,11 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Assignments', {
-      user: {
+      username: {
         type: Sequelize.STRING,
         references: {
           model: 'Users',
-          key: 'user',
+          key: 'username',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
@@ -40,7 +40,7 @@ module.exports = {
     })
 
     await queryInterface.addConstraint('Assignments', {
-      fields: ['user', 'assignment'],
+      fields: ['username', 'assignment'],
       type: 'primary key',
       name: 'pk_user_assignment'
     })
@@ -48,7 +48,7 @@ module.exports = {
     // Add check constraints to enforce non-empty strings
     await queryInterface.sequelize.query(`
       ALTER TABLE "Assignments"
-      ADD CONSTRAINT user_not_empty CHECK (user <> ''),
+      ADD CONSTRAINT username_not_empty CHECK (username <> ''),
       ADD CONSTRAINT assignment_not_empty CHECK (assignment <> ''),
       ADD CONSTRAINT image_not_empty CHECK (image <> '')
     `)

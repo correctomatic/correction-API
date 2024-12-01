@@ -36,9 +36,13 @@ async function routes(fastify, _options) {
 
       try {
         const apiKeys = await user.getApiKeys()
-        reply.send(apiKeys)
+        const mappedApiKeys = apiKeys.map(apiKey => ({
+          key: apiKey.key,
+          createdAt: apiKey.createdAt,
+        }))
+        reply.send(mappedApiKeys)
       } catch(_error) {
-        reply.status(500).send({ error: 'Failed to list API keys' })
+        reply.status(500).send(errorResponse('Failed to list API keys' ))
       }
     })
 
@@ -55,7 +59,7 @@ async function routes(fastify, _options) {
         await apiKey.destroy()
         reply.status(204).send()
       } catch(_error) {
-        reply.status(500).send({ error: 'Failed to revoke API key' })
+        reply.status(500).send(errorResponse('Failed to revoke API key'))
       }
     })
 

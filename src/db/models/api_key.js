@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
 
   class ApiKey extends Model {
     static associate(models) {
-      ApiKey.belongsTo(models.User, { foreignKey: 'user', as: 'owner' })
+      ApiKey.belongsTo(models.User, { foreignKey: 'username', as: 'owner' })
     }
 
     // Override the default create method to use the retry logic
@@ -48,15 +48,15 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       defaultValue: () => crypto.randomBytes(32).toString('hex')
     },
-    user: {
+    username: {
       type: DataTypes.STRING,
       references: {
         model: 'User',
-        key: 'user',
+        key: 'username',
       },
       validate: {
         notEmpty: {
-          msg: 'User cannot be empty'
+          msg: 'Username cannot be empty'
         }
       }
     },

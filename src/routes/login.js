@@ -17,13 +17,13 @@ async function routes(fastify, _options) {
     async (request, reply) => {
       try {
         const { user, password } = request.body
-        const userInstance = await User.findOne({ where: { user } })
+        const userInstance = await User.findOne({ where: { username: user } })
 
         if (!userInstance || ! await userInstance.validatePassword(password)) {
           return reply.status(401).send(errorResponse('Invalid credentials'))
         }
 
-        const token = jwt.sign({ user: userInstance.user }, env.jwt.secretKey, { expiresIn: env.jwt.expiration })
+        const token = jwt.sign({ user: userInstance.username }, env.jwt.secretKey, { expiresIn: env.jwt.expiration })
         return { token }
       } catch (error) {
         logger.error(error)

@@ -25,7 +25,7 @@ module.exports = {
 
     const assignments = await Promise.all(assignmentsData.map(async (row) => {
       return {
-        user: row.user,
+        username: row.username,
         assignment: row.assignment,
         image: row.image,
         params: paramsToObject(row.params),

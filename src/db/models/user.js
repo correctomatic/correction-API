@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
 
   class User extends Model {
     static associate(models) {
-      User.hasMany(models.Assignment, { foreignKey: 'user', as: 'assignments' })
-      User.hasMany(models.ApiKey, { foreignKey: 'user', as: 'apiKeys' })
+      User.hasMany(models.Assignment, { foreignKey: 'username', as: 'assignments' })
+      User.hasMany(models.ApiKey, { foreignKey: 'username', as: 'apiKeys' })
     }
 
     async validatePassword(password) {
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   User.init({
-    user: {
+    username: {
       type: DataTypes.STRING,
       primaryKey: true,
     },

@@ -10,7 +10,7 @@ module.exports = {
 
     const users = await Promise.all(apiKeysData.map(async (row) => ({
       key: row.key,
-      user: row.user,
+      username: row.username,
       createdAt: row.createdAt || new Date(),
       updatedAt: row.updatedAt || new Date()
     })))

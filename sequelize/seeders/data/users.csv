@@ -1,4 +1,4 @@
-user,password,roles
+username,password,roles
 admin,admin,admin;otherrole
 correctomatic,correctomatic_pass,
 pagination,pagination,

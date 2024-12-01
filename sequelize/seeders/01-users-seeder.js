@@ -11,7 +11,7 @@ module.exports = {
 
     // Transform data as needed (e.g., hashing passwords for user data)
     const users = await Promise.all(usersData.map(async (row) => ({
-      user: row.user,
+      username: row.username,
       roles: row.roles ? row.roles?.split(';') : null,
       password: await bcrypt.hash(row.password, 10),
       createdAt: row.createdAt || new Date(),
