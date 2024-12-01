@@ -5,6 +5,7 @@ const { validateQueryParams, errorResponse } = require('../../lib/requests')
 const { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } = require('../../schemas/assignment_schemas')
 
 const authenticator = require('../../middleware/authenticator')
+const { userNameToUser } = require('../../lib/utils')
 
 const DEFAULT_LIMIT = 10
 const MAX_LIMIT = 50
@@ -32,7 +33,7 @@ async function routes(fastify, _options) {
       try {
         const { limit, offset } = request
         const assignments = await Assignment.findAll({ limit, offset })
-        return reply.send(assignments)
+        return reply.send(assignments.map(userNameToUser))
       } catch (error) {
         logger.error(error)
         return reply.status(500).send(errorResponse('Internal server error'))
@@ -51,10 +52,10 @@ async function routes(fastify, _options) {
         const { limit, offset } = request
         const { user } = request.params
         const assignments = await Assignment.findAll({
-          where: { user }, limit, offset
+          where: { username: user }, limit, offset
         })
 
-        return reply.send(assignments)
+        return reply.send(assignments.map(userNameToUser))
       } catch (error) {
         logger.error(error)
         return reply.status(500).send(errorResponse('Internal server error'))
@@ -73,13 +74,13 @@ async function routes(fastify, _options) {
         const { user } = request.params
         const { assignment } = request.params
         const theAssignment = await Assignment.findOne({
-          where: { user, assignment }
+          where: { username: user, assignment }
         })
 
         if (!theAssignment) {
           return reply.status(404).send(errorResponse('Assignment not found'))
         }
-        return reply.send(theAssignment)
+        return reply.send(userNameToUser(theAssignment))
       } catch (error) {
         logger.error(error)
         return reply.status(500).send(errorResponse('Internal server error'))

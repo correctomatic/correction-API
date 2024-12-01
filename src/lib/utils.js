@@ -22,7 +22,22 @@ async function moveToUploadsDir(uploadsDirectory, filename) {
   return destination
 }
 
+
+function renameProperty(obj, from, to) {
+  let res = {
+    ...obj,
+    [to]: obj[from],
+  }
+  delete res[from]
+  return res
+}
+
+function userNameToUser(entity) {
+  return renameProperty(entity.dataValues, 'username', 'user')
+}
+
 module.exports = {
   ensureDirectoryExists,
   moveToUploadsDir,
+  userNameToUser
 }

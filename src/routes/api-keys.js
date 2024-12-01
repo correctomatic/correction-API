@@ -36,11 +36,7 @@ async function routes(fastify, _options) {
 
       try {
         const apiKeys = await user.getApiKeys()
-        const mappedApiKeys = apiKeys.map(apiKey => ({
-          key: apiKey.key,
-          createdAt: apiKey.createdAt,
-        }))
-        reply.send(mappedApiKeys)
+        reply.send(apiKeys)
       } catch(_error) {
         reply.status(500).send(errorResponse('Failed to list API keys' ))
       }
@@ -55,7 +51,7 @@ async function routes(fastify, _options) {
 
       try {
         const apiKey = await user.findApiKey(id)
-        if (!apiKey) return reply.status(404).send({ error: 'API key not found' })
+        if (!apiKey) return reply.status(404).send(errorResponse('API key not found'))
         await apiKey.destroy()
         reply.status(204).send()
       } catch(_error) {

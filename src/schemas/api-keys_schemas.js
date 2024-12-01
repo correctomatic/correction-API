@@ -71,7 +71,7 @@ const DELETE_API_KEY_SCHEMA = {
   security: [{ bearerAuth: [] }],
   response: {
     204: {
-      description: 'Successfully deleted the assignment.',
+      description: 'Successfully deleted the API key.',
       type: 'null',
     },
     400: {
