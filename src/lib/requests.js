@@ -1,3 +1,6 @@
+const DEFAULT_REQUEST_LIMIT = 10
+const MAX_REQUEST_LIMIT = 50
+
 function validateQueryParams(schema) {
 
   return async function (request, reply) {
@@ -21,7 +24,14 @@ function errorResponse(message) {
   return { success: false, message }
 }
 
+async function setLimitAndOffset(request, _reply) {
+  let { limit, offset = 0 } = request.query
+  request.limit = Math.min(parseInt(limit) || DEFAULT_REQUEST_LIMIT, MAX_REQUEST_LIMIT)
+  request.offset = parseInt(offset) || 0
+}
+
 module.exports = {
   validateQueryParams,
-  errorResponse
+  errorResponse,
+  setLimitAndOffset
 }

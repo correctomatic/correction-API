@@ -61,8 +61,22 @@ module.exports = (sequelize, DataTypes) => {
           user.password = await bcrypt.hash(user.password, 10)
         }
       }
-    }
+    },
+    defaultScope: {
+      attributes: { exclude: ['password'] },
+    },
+    scopes: {
+      withPassword: {
+        attributes: {},
+      },
+    },
   })
+
+  User.prototype.toJSON = function () {
+    const values = Object.assign({}, this.get())
+    delete values.password
+    return values
+  }
 
   return User
 }

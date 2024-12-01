@@ -12,6 +12,7 @@ const {
 
 const { errorResponse } = require('../../lib/requests')
 const { handleSequelizeError } = require('../../lib/errors')
+const { AssignmentPolicy } = require('../../policies/assignment_policy.js')
 
 function successResponse(assignment) {
   return {
@@ -55,7 +56,7 @@ async function routes(fastify, _options) {
     { schema: CREATE_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
 
-      throw new Error('Not implemented')
+
       const { user } = request
       const { assignment, image, params, allowed_user_params } = request.body
 
@@ -67,6 +68,7 @@ async function routes(fastify, _options) {
           params,
           allowed_user_params
         })
+        const assignmentPolicy = new AssignmentPolicy(request.user, request.params.user)
 
         return reply.status(201).send(successResponse(newAssignment))
       } catch (error) {

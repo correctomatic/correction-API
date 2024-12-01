@@ -1,20 +1,11 @@
 'use strict'
 
 const logger = require('../../logger')
-const { validateQueryParams, errorResponse } = require('../../lib/requests')
+const { validateQueryParams, errorResponse, setLimitAndOffset } = require('../../lib/requests')
 const { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } = require('../../schemas/assignment_schemas')
 
 const authenticator = require('../../middleware/authenticator')
 const { userNameToUser } = require('../../lib/utils')
-
-const DEFAULT_LIMIT = 10
-const MAX_LIMIT = 50
-
-async function setLimitAndOffset(request, _reply) {
-  let { limit, offset = 0 } = request.query
-  request.limit = Math.min(parseInt(limit) || DEFAULT_LIMIT, MAX_LIMIT)
-  request.offset = parseInt(offset) || 0
-}
 
 async function routes(fastify, _options) {
 
