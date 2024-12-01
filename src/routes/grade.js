@@ -37,7 +37,7 @@ async function getAssignment(db, assignment_id) {
   const [user, assignment] = splitAssignmentId(assignment_id)
   if (!user || !assignment) throw new ParamsError("Incorrect assignment_id format, must be 'user/assignment'")
 
-  const assignmentInstance = await db.models.Assignment.findOne({ where: { user, assignment } })
+  const assignmentInstance = await db.models.Assignment.findOne({ where: { username: user, assignment } })
   if (!assignmentInstance) throw new ImageError('Assignment not found')
 
   return assignmentInstance
