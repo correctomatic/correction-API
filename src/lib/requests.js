@@ -1,6 +1,8 @@
 const DEFAULT_REQUEST_LIMIT = 10
 const MAX_REQUEST_LIMIT = 50
 
+const { userNameToUser } = require('./utils')
+
 function validateQueryParams(schema) {
 
   return async function (request, reply) {
@@ -30,8 +32,16 @@ async function setLimitAndOffset(request, _reply) {
   request.offset = parseInt(offset) || 0
 }
 
+function assignmentSuccessResponse(assignment) {
+  return {
+    success: true,
+    assignment: userNameToUser(assignment)
+  }
+}
+
 module.exports = {
   validateQueryParams,
+  setLimitAndOffset,
   errorResponse,
-  setLimitAndOffset
+  assignmentSuccessResponse
 }

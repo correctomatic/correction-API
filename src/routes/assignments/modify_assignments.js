@@ -25,58 +25,8 @@ function successResponse(assignment) {
 async function routes(fastify, _options) {
 
   const Assignment = fastify.db.sequelize.models.Assignment
-  const User = fastify.db.sequelize.models.User
 
   fastify.addHook('preHandler', authenticator())
-
-  // Create a new assignment for the current user
-  fastify.post(
-    '/',
-    { schema: CREATE_ASSIGNMENT_SCHEMA },
-    async (request, reply) => {
-      const { user } = request
-      const { assignment, image, params, allowed_user_params } = request.body
-
-      try {
-        const newAssignment = await Assignment.create({
-          user: user.user,
-          assignment,
-          image,
-          params,
-          allowed_user_params
-        })
-
-        return reply.status(201).send(successResponse(newAssignment))
-      } catch (error) {
-        handleSequelizeError(error, reply, 'Error creating assignment')
-      }
-    })
-
-  // Create a new assignment for a different user (admin only)
-  fastify.post(
-    '/:user',
-    { schema: CREATE_ASSIGNMENT_SCHEMA },
-    async (request, reply) => {
-
-
-      const { user } = request
-      const { assignment, image, params, allowed_user_params } = request.body
-
-      try {
-        const newAssignment = await Assignment.create({
-          user: user.user,
-          assignment,
-          image,
-          params,
-          allowed_user_params
-        })
-        const assignmentPolicy = new AssignmentPolicy(request.user, request.params.user)
-
-        return reply.status(201).send(successResponse(newAssignment))
-      } catch (error) {
-        handleSequelizeError(error, reply, 'Error creating assignment')
-      }
-    })
 
     async function updateAssignment(username, request, reply) {
       const { assignment } = request.params
@@ -85,7 +35,7 @@ async function routes(fastify, _options) {
       try {
 
         const theAssignment = await Assignment.findOne({
-          where: { username: username, assignment }
+          where: { username, assignment }
         })
 
         if (!theAssignment) {

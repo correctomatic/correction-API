@@ -25,6 +25,10 @@ function sequelizeError(error) {
     return ('Duplicated assignment')
   }
 
+  if (error.name === 'SequelizeForeignKeyConstraintError') {
+    return ('Invalid reference')
+  }
+
   return null
 }
 
