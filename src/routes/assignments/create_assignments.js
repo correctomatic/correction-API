@@ -19,7 +19,7 @@ async function routes(fastify, _options) {
 
   async function createAssignment(forUserName, request, reply) {
 
-    const { user: loggedUser} = request
+    const { user: loggedUser } = request
     const { assignment, image, params, allowed_user_params } = request.body
 
     try {
@@ -40,7 +40,7 @@ async function routes(fastify, _options) {
       const forUser = await User.findOne({
         where: { username: forUserName }
       })
-      if(!forUser) return reply.status(404).send(errorResponse('User not found'))
+      if (!forUser) return reply.status(404).send(errorResponse('User not found'))
 
       await newAssignment.save()
       return reply.status(201).send(assignmentSuccessResponse(newAssignment))
@@ -63,7 +63,7 @@ async function routes(fastify, _options) {
     '/:user',
     { schema: CREATE_ASSIGNMENT_SCHEMA },
     async (request, reply) => {
-      const { user:forUsername } = request.params
+      const { user: forUsername } = request.params
       return createAssignment(forUsername, request, reply)
     })
 
