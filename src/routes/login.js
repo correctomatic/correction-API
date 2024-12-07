@@ -17,7 +17,7 @@ async function routes(fastify, _options) {
     async (request, reply) => {
       try {
         const { user, password } = request.body
-        const userInstance = await User.findOne({ where: { username: user } })
+        const userInstance = await User.scope('withPassword').findOne({ where: { username: user } })
 
         if (!userInstance || ! await userInstance.validatePassword(password)) {
           return reply.status(401).send(errorResponse('Invalid credentials'))

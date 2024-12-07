@@ -22,7 +22,7 @@ function sequelizeError(error) {
   }
 
   if (error.name === 'SequelizeUniqueConstraintError') {
-    return ('Duplicated assignment')
+    return ('Record already exists')
   }
 
   if (error.name === 'SequelizeForeignKeyConstraintError') {

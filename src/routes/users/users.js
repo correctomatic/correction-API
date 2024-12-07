@@ -1,11 +1,13 @@
 const logger = require('../../logger')
 const authenticator = require('@middleware/authenticator.js')
 const UserPolicy = require('@policies/user_policy.js')
+const { handleSequelizeError } = require('@lib/errors.js')
 
 const { validateQueryParams, errorResponse, setLimitAndOffset } = require('@lib/requests')
 
 const {
   GET_USERS_SCHEMA,
+  CREATE_USER_SCHEMA
 } = require('@schemas/user_schemas.js')
 
 async function routes(fastify, _options) {
@@ -40,13 +42,21 @@ async function routes(fastify, _options) {
 
   fastify.post(
     '/',
+    { schema: CREATE_USER_SCHEMA },
     async (request, reply) => {
       try {
-        const user = await User.create(request.body)
-        reply.code(201).send(user)
+        const userPolicy = new UserPolicy(request.user)
+        if (!userPolicy.can('create')) {
+          return reply.code(403).send(errorResponse('You are not authorized to create a user'))
+        }
+
+        const { user, password, roles } = request.body
+
+        const theUser = await User.create({username: user, password, roles })
+        reply.code(201).send({ user: theUser.username, roles: theUser.roles })
       } catch (error) {
         logger.error(error)
-        errorResponse(reply, error)
+        handleSequelizeError(error, reply, 'Error creating assignment')
       }
     })
 

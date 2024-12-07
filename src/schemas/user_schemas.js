@@ -39,6 +39,45 @@ const GET_USERS_SCHEMA = {
   }
 }
 
+const CREATE_USER_REQUEST = {
+  type: 'object',
+  properties: {
+    user: { type: 'string' },
+    password: { type: 'string' },
+    roles: { type: 'array', items: { type: 'string' } }
+  },
+  required: ['user', 'password'],
+  additionalProperties: false
+}
+
+const CREATE_USER_RESPONSE = {
+  type: 'object',
+  properties: {
+    user: { type: 'string' },
+    roles: { type: 'array', items: { type: 'string' } }
+  },
+  required: ['user', 'roles'],
+  additionalProperties: false
+}
+
+const CREATE_USER_SCHEMA = {
+  tags: ["Users Management"],
+  summary: "Create a new user (admin only)",
+  description: "Create a new user. Only works for Admins.",
+  body: CREATE_USER_REQUEST,
+  response: {
+    201: CREATE_USER_RESPONSE,
+    400: {
+      description: 'Bad request, invalid input data or missing required fields.',
+      ...ERROR_RESPONSE_SCHEMA
+    },
+    500: {
+      description: 'Internal server error, something went wrong on the server.',
+      ...ERROR_RESPONSE_SCHEMA
+    }
+  }
+}
+
 const SET_PASSWORD_BASE_SCHEMA = {
   tags: ["Users Management"],
   body: {
@@ -80,6 +119,7 @@ const UPDATE_FOREIGN_PASSWORR_SCHEMA = {
 
 module.exports = {
   GET_USERS_SCHEMA,
+  CREATE_USER_SCHEMA,
   UPDATE_OWN_PASSWORD_SCHEMA,
   UPDATE_FOREIGN_PASSWORR_SCHEMA,
 }

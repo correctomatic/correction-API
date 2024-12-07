@@ -1,5 +1,5 @@
 'use strict'
-
+const logger = require('../../logger')
 const authenticator = require('@middleware/authenticator.js')
 
 const {
@@ -45,6 +45,7 @@ async function routes(fastify, _options) {
       await newAssignment.save()
       return reply.status(201).send(assignmentSuccessResponse(newAssignment))
     } catch (error) {
+      logger.error(error)
       handleSequelizeError(error, reply, 'Error creating assignment')
     }
   }

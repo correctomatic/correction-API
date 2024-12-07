@@ -12,8 +12,10 @@ async function routes(fastify, _options) {
 
   fastify.addHook('preHandler', authenticator('bearer'))
 
+  // TO-DO: Allow admin to manage API keys for other users
+
   fastify.post(
-    '/api-keys',
+    '/',
     { schema: CREATE_API_KEY_SCHEMA },
     async (request, reply) => {
       const user = request.user
@@ -28,8 +30,14 @@ async function routes(fastify, _options) {
       }
     })
 
+  fastify.post(
+    '/:user',
+    async (request, reply) => {
+      throw new Error('Not implemented')
+    })
+
   fastify.get(
-    '/api-keys',
+    '/',
     { schema: LIST_API_KEYS_SCHEMA },
     async (request, reply) => {
       const user = request.user
@@ -37,13 +45,19 @@ async function routes(fastify, _options) {
       try {
         const apiKeys = await user.getApiKeys()
         reply.send(apiKeys)
-      } catch(_error) {
-        reply.status(500).send(errorResponse('Failed to list API keys' ))
+      } catch (_error) {
+        reply.status(500).send(errorResponse('Failed to list API keys'))
       }
     })
 
+  fastify.get(
+    '/:user',
+    async (request, reply) => {
+      throw new Error('Not implemented')
+    })
+
   fastify.delete(
-    '/api-keys/:id',
+    '/:id',
     { schema: DELETE_API_KEY_SCHEMA },
     async (request, reply) => {
       const { id } = request.params
@@ -54,11 +68,16 @@ async function routes(fastify, _options) {
         if (!apiKey) return reply.status(404).send(errorResponse('API key not found'))
         await apiKey.destroy()
         reply.status(204).send()
-      } catch(_error) {
+      } catch (_error) {
         reply.status(500).send(errorResponse('Failed to revoke API key'))
       }
     })
 
+  fastify.delete(
+    '/:user/:id',
+    async (request, reply) => {
+      throw new Error('Not implemented')
+    })
 }
 
 module.exports = routes
