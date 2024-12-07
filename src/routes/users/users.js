@@ -1,7 +1,8 @@
 const logger = require('../../logger')
-const authenticator = require('../../middleware/authenticator.js')
+const authenticator = require('@middleware/authenticator.js')
+const UserPolicy = require('@policies/user_policy.js')
 
-const { errorResponse } = require('@lib/requests')
+const { validateQueryParams, errorResponse, setLimitAndOffset } = require('@lib/requests')
 
 const {
   GET_USERS_SCHEMA,
@@ -15,17 +16,25 @@ async function routes(fastify, _options) {
 
   fastify.get(
     '/',
-    { schema: GET_USERS_SCHEMA },
-    async (_request, reply) => {
+    {
+      schema: GET_USERS_SCHEMA,
+      preHandler: [validateQueryParams(GET_USERS_SCHEMA), setLimitAndOffset]
+    },
+    async (request, reply) => {
 
-      // TO-DO: remember to validate that there are no unexpected query parameters
-      // TO-DO: admin only
       try {
-        const users = await User.findAll()
+        const { limit, offset } = request
+
+        const userPolicy = new UserPolicy(request.user)
+        if (!userPolicy.can('list')) {
+          return reply.code(403).send(errorResponse('You are not authorized to list users'))
+        }
+
+        const users = await User.findAll({ limit, offset })
         reply.send(users)
       } catch (error) {
         logger.error(error)
-        errorResponse(reply, error)
+        return reply.status(500).send(errorResponse('Internal server error'))
       }
     })
 

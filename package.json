@@ -18,7 +18,9 @@
     "@db": "src/db",
     "@models": "src/db/models",
     "@schemas": "src/schemas",
-    "@lib": "src/lib"
+    "@lib": "src/lib",
+    "@policies": "src/policies",
+    "@middleware": "src/middleware"
   },
   "dependencies": {
     "@fastify/autoload": "^5.8.2",

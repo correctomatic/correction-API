@@ -4,7 +4,7 @@ const logger = require('../../logger')
 const { validateQueryParams, errorResponse, setLimitAndOffset } = require('@lib/requests')
 const { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } = require('@schemas/assignment_schemas')
 
-const authenticator = require('../../middleware/authenticator')
+const authenticator = require('@middleware/authenticator')
 const { userNameToUser } = require('@lib/utils')
 
 async function routes(fastify, _options) {

@@ -2,7 +2,7 @@ const env = require('../config/env')
 const logger = require('../logger')
 const { GRADE_SCHEMA } = require('@schemas/grade_schemas')
 
-const authenticator = require('../middleware/authenticator')
+const authenticator = require('@middleware/authenticator')
 
 const { ensureDirectoryExists, moveToUploadsDir } = require('@lib/utils')
 const { createCorrectionJob } = require('@lib/correctomatic')

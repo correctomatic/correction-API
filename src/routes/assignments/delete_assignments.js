@@ -1,6 +1,6 @@
 'use strict'
 
-const authenticator = require('../../middleware/authenticator.js')
+const authenticator = require('@middleware/authenticator.js')
 
 const {
   DELETE_OWN_ASSIGNMENT_SCHEMA,
@@ -9,7 +9,7 @@ const {
 
 const { errorResponse } = require('@lib/requests.js')
 const { handleSequelizeError } = require('@lib/errors.js')
-const AssignmentPolicy = require('../../policies/assignment_policy.js')
+const AssignmentPolicy = require('@policies/assignment_policy.js')
 
 async function routes(fastify, _options) {
 

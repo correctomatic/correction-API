@@ -11,15 +11,19 @@ class UserPolicy extends Policy {
   }
 
   #sameUser() {
-    return this.loggedUser.id === this.user.id
+    return this.user.id === this.record.id
   }
 
   #onlyEditPassword() {
-    return this.user.editedFields.length === 1 && this.user.editedFields.includes('password')
+    return this.record.editedFields.length === 1 && this.record.editedFields.includes('password')
+  }
+
+  list() {
+    return this.#isAdmin()
   }
 
   create() {
-    this.#isAdmin()
+    return this.#isAdmin()
   }
 
   edit() {
@@ -27,7 +31,7 @@ class UserPolicy extends Policy {
   }
 
   destroy() {
-    this.#isAdmin()
+    return this.#isAdmin()
   }
 }
 

@@ -4,7 +4,7 @@ const {
   DELETE_API_KEY_SCHEMA
 } = require('@schemas/api-keys_schemas')
 
-const authenticator = require('../middleware/authenticator')
+const authenticator = require('@middleware/authenticator')
 const { errorResponse } = require('@lib/requests')
 const { sequelizeError } = require('@lib/errors')
 
