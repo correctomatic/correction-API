@@ -2,11 +2,11 @@ const {
   CREATE_API_KEY_SCHEMA,
   LIST_API_KEYS_SCHEMA,
   DELETE_API_KEY_SCHEMA
-} = require('../schemas/api-keys_schemas')
+} = require('@schemas/api-keys_schemas')
 
 const authenticator = require('../middleware/authenticator')
-const { errorResponse } = require('../lib/requests')
-const { sequelizeError } = require('../lib/errors')
+const { errorResponse } = require('@lib/requests')
+const { sequelizeError } = require('@lib/errors')
 
 async function routes(fastify, _options) {
 

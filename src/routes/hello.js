@@ -1,4 +1,4 @@
-const { HELLO_SCHEMA } = require('../schemas/hello_schemas')
+const { HELLO_SCHEMA } = require('@schemas/hello_schemas')
 
 async function routes(fastify, _options) {
 

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const env = require('../config/env')
 const logger = require('../logger')
 
-const { errorResponse } = require('../lib/requests')
+const { errorResponse } = require('@lib/requests')
 
 async function bearerAuthenticate(request) {
   const token = request.headers['authorization']?.split(' ')[1]

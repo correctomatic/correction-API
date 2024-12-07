@@ -1,13 +1,13 @@
 const env = require('../config/env')
 const logger = require('../logger')
-const { GRADE_SCHEMA } = require('../schemas/grade_schemas')
+const { GRADE_SCHEMA } = require('@schemas/grade_schemas')
 
 const authenticator = require('../middleware/authenticator')
 
-const { ensureDirectoryExists, moveToUploadsDir } = require('../lib/utils')
-const { createCorrectionJob } = require('../lib/correctomatic')
-const { ParamsError, ImageError } = require('../lib/errors')
-const { errorResponse } = require('../lib/requests')
+const { ensureDirectoryExists, moveToUploadsDir } = require('@lib/utils')
+const { createCorrectionJob } = require('@lib/correctomatic')
+const { ParamsError, ImageError } = require('@lib/errors')
+const { errorResponse } = require('@lib/requests')
 
 const UPLOAD_DIRECTORY = env.UPLOAD_DIRECTORY
 

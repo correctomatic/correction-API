@@ -16,7 +16,9 @@
   },
   "_moduleAliases": {
     "@db": "src/db",
-    "@models": "src/db/models"
+    "@models": "src/db/models",
+    "@schemas": "src/schemas",
+    "@lib": "src/lib"
   },
   "dependencies": {
     "@fastify/autoload": "^5.8.2",

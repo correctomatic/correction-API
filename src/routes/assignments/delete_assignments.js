@@ -5,10 +5,10 @@ const authenticator = require('../../middleware/authenticator.js')
 const {
   DELETE_OWN_ASSIGNMENT_SCHEMA,
   DELETE_FOREIGN_ASSIGNMENT_SCHEMA
-} = require('../../schemas/assignment_schemas.js')
+} = require('@schemas/assignment_schemas.js')
 
-const { errorResponse } = require('../../lib/requests.js')
-const { handleSequelizeError } = require('../../lib/errors.js')
+const { errorResponse } = require('@lib/requests.js')
+const { handleSequelizeError } = require('@lib/errors.js')
 const AssignmentPolicy = require('../../policies/assignment_policy.js')
 
 async function routes(fastify, _options) {

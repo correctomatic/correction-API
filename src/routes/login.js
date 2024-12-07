@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken')
 const env = require('../config/env')
 const logger = require('../logger')
 
-const { LOGIN_SCHEMA } = require('../schemas/login_schema')
-const errorResponse = require('../lib/requests').errorResponse
+const { LOGIN_SCHEMA } = require('@schemas/login_schema')
+const errorResponse = require('@lib/requests').errorResponse
 
 async function routes(fastify, _options) {
 
