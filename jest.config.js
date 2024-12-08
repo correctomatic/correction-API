@@ -2,6 +2,14 @@ const aliases = require('module-alias-jest/register')
 
 module.exports = {
   testEnvironment: 'node',
+  transform: {
+    '^.+\\.[tj]s$': 'babel-jest', // Use Babel to transform JavaScript/TypeScript files
+  },
+  transformIgnorePatterns: [
+    // Ensure no files in node_modules are ignored
+    // This pattern will not ignore any files in node_modules
+    '/node_modules/(?!.*)',
+  ],
   verbose: true,
   testMatch: ['<rootDir>/test/**/*.test.js'],
   // globalSetup: './test/global-setup.js',
