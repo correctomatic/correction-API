@@ -1,11 +1,10 @@
 'use strict'
-const { Model } = require('sequelize')
+import { Model } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) => {
-
+export default (sequelize, DataTypes) => {
   class Assignment extends Model {
     static associate(models) {
-      Assignment.belongsTo(models.User, { foreignKey: 'username', as: 'owner' })
+      Assignment.belongsTo(models.User, { foreignKey: 'username', as: 'owner' });
     }
   }
 
@@ -20,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       validate: {
         notEmpty: {
-          msg: 'Usernme cannot be empty'
+          msg: 'Username cannot be empty'
         }
       }
     },
@@ -53,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         fields: ['username','assignment']
       }
     ]
-  })
+  });
 
-  return Assignment
-}
+  return Assignment;
+};

@@ -1,32 +1,30 @@
-const { join } = require('path')
-require('module-alias/register')
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
 
-const Fastify = require('fastify')
-const AutoLoad = require('@fastify/autoload')
-const fastifyCors = require('@fastify/cors')
-const fastifySwagger = require('@fastify/swagger')
-const fastifySwaggerUi = require('@fastify/swagger-ui')
-const multipart = require('@fastify/multipart')
-const { swaggerOptions, swaggerUiOptions } = require('./swagger')
-const fs = require('fs')
-const os = require('os')
-const path = require('path')
-const { pipeline } = require('stream/promises')
-
-const logger = require('./logger')
-const dbConnector = require('./plugins/sequelize')
-
-
+import Fastify from 'fastify'
+import AutoLoad from '@fastify/autoload'
+import fastifyCors from '@fastify/cors'
+import fastifySwagger from '@fastify/swagger'
+import fastifySwaggerUi from '@fastify/swagger-ui'
+import multipart from '@fastify/multipart'
+import { swaggerOptions, swaggerUiOptions } from './swagger.js'
+import { pipeline } from 'stream/promises'
+import logger from './logger.js'
+import dbConnector from './plugins/sequelize.js'
+import AjvErrors from 'ajv-errors'
 
 const fastify = Fastify({
   logger,
   ajv: {
-    customOptions: { allErrors: true, strict: false, removeAdditional: false, },
+    customOptions: { allErrors: true, strict: false, removeAdditional: false },
     plugins: [
-      [require('ajv-errors')]
+      [AjvErrors]
     ]
   }
 })
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 // This function is called for each file in the multipart form, will write
 // the file to a temporary location so it don't be stored in memory
@@ -46,13 +44,11 @@ fastify.register(fastifySwaggerUi, swaggerUiOptions)
 fastify.register(fastifyCors, { origin: '*' })
 fastify.register(multipart, { attachFieldsToBody: true, onFile })
 
-
 fastify.register(dbConnector, { logging: (msg) => logger.info(msg) })
 
 // Routes MUST be loaded after the dbConnector plugin
 fastify.register(AutoLoad, {
-  dir: join(__dirname, 'routes'),
+  dir: path.join(__dirname, 'routes'),
 })
 
-
-module.exports = fastify
+export default fastify

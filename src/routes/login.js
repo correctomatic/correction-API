@@ -1,13 +1,12 @@
 'use strict'
 
-const jwt = require('jsonwebtoken')
-const env = require('../config/env')
-const logger = require('../logger')
+import jwt from 'jsonwebtoken'
+import env from '../config/env'
+import logger from '../logger'
+import { LOGIN_SCHEMA } from '@schemas/login_schema'
+import { errorResponse } from '@lib/requests'
 
-const { LOGIN_SCHEMA } = require('@schemas/login_schema')
-const errorResponse = require('@lib/requests').errorResponse
-
-async function routes(fastify, _options) {
+export default async function routes(fastify, _options) {
 
   const User = fastify.db.models.User
 
@@ -32,5 +31,3 @@ async function routes(fastify, _options) {
     })
 
 }
-
-module.exports = routes

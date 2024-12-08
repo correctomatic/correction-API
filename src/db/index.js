@@ -1,24 +1,21 @@
-'use strict'
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import Sequelize from 'sequelize';
+import env from '../config/env.js';
+import appConfig from '../../sequelize/config.js';
 
-const fs = require('fs')
-const path = require('path')
-const Sequelize = require('sequelize')
-const basename = path.basename(__filename)
-const env = require(__dirname + '/../config/env.js')
-const appConfig = require(__dirname + '/../../sequelize/config.js')[env.ENVIRONMENT]
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const basename = path.basename(__filename);
+const config = appConfig[env.ENVIRONMENT];
 
-function initSequelize(extraConfig) {
-  const db = {}
-  let sequelize
-  const config = {
-    ...appConfig,
-    ...extraConfig
-  }
+export default async function initSequelize(extraConfig) {
+  const db = {};
+  const sequelize = new Sequelize(config.database, config.username, config.password, { ...config, ...extraConfig });
 
-  sequelize = new Sequelize(config.database, config.username, config.password, config)
-
-  const modelsDirectory = path.join(__dirname, 'models')
-  fs
+  const modelsDirectory = path.join(__dirname, 'models');
+  const modelFiles = fs
     .readdirSync(modelsDirectory)
     .filter(file => {
       return (
@@ -26,24 +23,23 @@ function initSequelize(extraConfig) {
         file !== basename &&
         file.slice(-3) === '.js' &&
         file.indexOf('.test.js') === -1
-      )
-    })
-    .forEach(file => {
-      const model = require(path.join(modelsDirectory, file))(sequelize, Sequelize.DataTypes)
-      db[model.name] = model
-    })
+      );
+    });
+
+  for (const file of modelFiles) {
+    const model = (await import(path.join(modelsDirectory, file))).default(sequelize, Sequelize.DataTypes);
+    db[model.name] = model;
+  }
 
   Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
-      db[modelName].associate(db)
+      db[modelName].associate(db);
     }
-  })
+  });
 
-  db.models = sequelize.models
-  db.sequelize = sequelize
-  db.Sequelize = Sequelize
+  db.models = sequelize.models;
+  db.sequelize = sequelize;
+  db.Sequelize = Sequelize;
 
-  return db
+  return db;
 }
-
-module.exports = initSequelize

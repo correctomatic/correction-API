@@ -1,5 +1,5 @@
-const fp = require('fastify-plugin')
-const initDB = require('../db/index.js')
+import fp from 'fastify-plugin'
+import initDB from '../db/index.js'
 
 async function dbConnector(fastify, options) {
   const db = initDB(options)
@@ -17,4 +17,4 @@ async function dbConnector(fastify, options) {
   })
 }
 
-module.exports = fp(dbConnector)
+export default fp(dbConnector)

@@ -1,7 +1,7 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
-module.exports = {
+export default {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('ApiKeys', {
       key: {
@@ -32,17 +32,17 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    })
+    });
 
     // Add check constraints to enforce non-empty strings
     await queryInterface.sequelize.query(`
       ALTER TABLE "ApiKeys"
       ADD CONSTRAINT username_not_empty CHECK (username <> '')
-    `)
+    `);
 
   },
 
   async down (queryInterface, _Sequelize) {
-    await queryInterface.dropTable('ApiKeys')
+    await queryInterface.dropTable('ApiKeys');
   }
 };

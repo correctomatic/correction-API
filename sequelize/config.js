@@ -1,4 +1,4 @@
-const env = require('../src/config/env')
+import env from '../src/config/env.js'
 
 const config = {
   development: {
@@ -28,6 +28,6 @@ const config = {
     dialect: 'postgres',
     // logging: true,
   },
-}
+};
 
-module.exports = config
+export default config;

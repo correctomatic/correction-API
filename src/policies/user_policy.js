@@ -1,4 +1,4 @@
-const Policy = require('./policy.js')
+import Policy from './policy.js'
 
 class UserPolicy extends Policy {
   constructor(loggedUser, user) {
@@ -35,4 +35,4 @@ class UserPolicy extends Policy {
   }
 }
 
-module.exports = UserPolicy
+export default UserPolicy

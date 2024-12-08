@@ -1,40 +1,38 @@
-'use strict'
-const { Model } = require('sequelize')
-const crypto = require('crypto')
+import { Model } from 'sequelize';
+import crypto from 'crypto';
 
-module.exports = (sequelize, DataTypes) => {
-
+export default (sequelize, DataTypes) => {
   class ApiKey extends Model {
     static associate(models) {
-      ApiKey.belongsTo(models.User, { foreignKey: 'username', as: 'owner' })
+      ApiKey.belongsTo(models.User, { foreignKey: 'username', as: 'owner' });
     }
 
     // Override the default create method to use the retry logic
     static async create(values, options) {
-      return this.createWithRetry(values, options)
+      return this.createWithRetry(values, options);
     }
 
     // Retry logic function
     // This shouldn't be a problem since the key is generated randomly, but who knows
     static async createWithRetry(values, options, maxRetries = 3) {
-      let attempt = 0
-      let apiKeyData = { ...values }
+      let attempt = 0;
+      let apiKeyData = { ...values };
 
       while (attempt < maxRetries) {
         try {
           // Attempt to create the ApiKey
           /* eslint-disable no-await-in-loop */
-          const apiKey = await super.create(apiKeyData, options)
-          return apiKey
+          const apiKey = await super.create(apiKeyData, options);
+          return apiKey;
         } catch (error) {
           // Check for duplicate key error
           if (error.name === 'SequelizeUniqueConstraintError') {
             // If it's a duplicate error, regenerate the key and retry
-            apiKeyData.key = crypto.randomBytes(32).toString('hex')
-            attempt += 1
+            apiKeyData.key = crypto.randomBytes(32).toString('hex');
+            attempt += 1;
           } else {
             // If the error is not related to a duplicate key, throw it
-            throw error
+            throw error;
           }
         }
       }
@@ -64,7 +62,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'ApiKey',
     timestamps: true
-  })
+  });
 
-  return ApiKey
-}
+  return ApiKey;
+};

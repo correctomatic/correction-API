@@ -1,14 +1,13 @@
-const {
+import {
   CREATE_API_KEY_SCHEMA,
   LIST_API_KEYS_SCHEMA,
   DELETE_API_KEY_SCHEMA
-} = require('@schemas/api-keys_schemas')
+} from '@schemas/api-keys_schemas'
+import authenticator from '@middleware/authenticator'
+import { errorResponse } from '@lib/requests'
+import { sequelizeError } from '@lib/errors'
 
-const authenticator = require('@middleware/authenticator')
-const { errorResponse } = require('@lib/requests')
-const { sequelizeError } = require('@lib/errors')
-
-async function routes(fastify, _options) {
+export default async function routes(fastify, _options) {
 
   fastify.addHook('preHandler', authenticator('bearer'))
 
@@ -79,5 +78,3 @@ async function routes(fastify, _options) {
       throw new Error('Not implemented')
     })
 }
-
-module.exports = routes

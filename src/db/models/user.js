@@ -1,17 +1,15 @@
-'use strict'
-const bcrypt = require('bcrypt')
-const { Model } = require('sequelize')
+import bcrypt from 'bcrypt';
+import { Model } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) => {
-
+export default (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      User.hasMany(models.Assignment, { foreignKey: 'username', as: 'assignments' })
-      User.hasMany(models.ApiKey, { foreignKey: 'username', as: 'apiKeys' })
+      User.hasMany(models.Assignment, { foreignKey: 'username', as: 'assignments' });
+      User.hasMany(models.ApiKey, { foreignKey: 'username', as: 'apiKeys' });
     }
 
     async validatePassword(password) {
-      return bcrypt.compare(password, this.password)
+      return bcrypt.compare(password, this.password);
     }
 
     static async findByApiKey(apiKey) {
@@ -21,15 +19,15 @@ module.exports = (sequelize, DataTypes) => {
           as: 'apiKeys',
           where: { key: apiKey },
         },
-      })
+      });
     }
 
     async findApiKey(keyValue) {
       const apiKeys = await this.getApiKeys({
         where: { key: keyValue },
         limit: 1
-      })
-      return apiKeys[0] || null
+      });
+      return apiKeys[0] || null;
     }
   }
 
@@ -54,11 +52,11 @@ module.exports = (sequelize, DataTypes) => {
     hooks: {
       async beforeCreate(user) {
         /* eslint-disable require-atomic-updates */
-        user.password = await bcrypt.hash(user.password, 10)
+        user.password = await bcrypt.hash(user.password, 10);
       },
       async beforeUpdate(user) {
         if (user.changed('password')) {
-          user.password = await bcrypt.hash(user.password, 10)
+          user.password = await bcrypt.hash(user.password, 10);
         }
       }
     },
@@ -70,13 +68,13 @@ module.exports = (sequelize, DataTypes) => {
         attributes: {},
       },
     },
-  })
+  });
 
   User.prototype.toJSON = function () {
-    const values = Object.assign({}, this.get())
-    delete values.password
-    return values
-  }
+    const values = Object.assign({}, this.get());
+    delete values.password;
+    return values;
+  };
 
-  return User
-}
+  return User;
+};

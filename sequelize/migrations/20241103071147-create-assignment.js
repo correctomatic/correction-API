@@ -1,6 +1,6 @@
 'use strict'
 /** @type {import('sequelize-cli').Migration} */
-module.exports = {
+export default {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Assignments', {
       username: {
@@ -37,13 +37,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    })
+    });
 
     await queryInterface.addConstraint('Assignments', {
       fields: ['username', 'assignment'],
       type: 'primary key',
       name: 'pk_user_assignment'
-    })
+    });
 
     // Add check constraints to enforce non-empty strings
     await queryInterface.sequelize.query(`
@@ -51,9 +51,9 @@ module.exports = {
       ADD CONSTRAINT username_not_empty CHECK (username <> ''),
       ADD CONSTRAINT assignment_not_empty CHECK (assignment <> ''),
       ADD CONSTRAINT image_not_empty CHECK (image <> '')
-    `)
+    `);
   },
   async down(queryInterface, _Sequelize) {
-    await queryInterface.dropTable('Assignments')
+    await queryInterface.dropTable('Assignments');
   }
 }

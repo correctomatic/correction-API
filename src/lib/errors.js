@@ -1,48 +1,42 @@
-const errorResponse = require('./requests').errorResponse
-const logger = require('../logger')
+import { errorResponse } from './requests';
+import logger from '../logger';
 
-class ParamsError extends Error {
+export class ParamsError extends Error {
   constructor(message) {
-    super(message)
-    this.name = 'ParamsError'
+    super(message);
+    this.name = 'ParamsError';
   }
 }
 
-class ImageError extends Error {
+export class ImageError extends Error {
   constructor(message) {
-    super(message)
-    this.name = 'ParamsError'
+    super(message);
+    this.name = 'ParamsError';
   }
 }
 
-function sequelizeError(error) {
+export function sequelizeError(error) {
   if (error.name === 'SequelizeValidationError') {
-    const messages = error.errors.map(e => `Field '${e.path}': ${e.message}`).join(', ')
-    return (`Validation error(s): ${messages}`)
+    const messages = error.errors.map(e => `Field '${e.path}': ${e.message}`).join(', ');
+    return (`Validation error(s): ${messages}`);
   }
 
   if (error.name === 'SequelizeUniqueConstraintError') {
-    return ('Record already exists')
+    return ('Record already exists');
   }
 
   if (error.name === 'SequelizeForeignKeyConstraintError') {
-    return ('Invalid reference')
+    return ('Invalid reference');
   }
 
-  return null
+  return null;
 }
 
-function handleSequelizeError(error, reply, message = 'Error') {
-  const userError = sequelizeError(error)
-  if (userError) return reply.status(400).send(errorResponse(userError))
+export function handleSequelizeError(error, reply, message = 'Error') {
+  const userError = sequelizeError(error);
+  if (userError) return reply.status(400).send(errorResponse(userError));
   else {
-    logger.error(`${message}: ${JSON.stringify(error)}`)
-    return reply.status(500).send(errorResponse('Internal server error'))
+    logger.error(`${message}: ${JSON.stringify(error)}`);
+    return reply.status(500).send(errorResponse('Internal server error'));
   }
-}
-
-module.exports = {
-  ParamsError,
-  ImageError,
-  sequelizeError, handleSequelizeError
 }

@@ -1,43 +1,36 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs';
+import path from 'path';
 
-async function ensureDirectoryExists(directory) {
+export async function ensureDirectoryExists(directory) {
   try {
-    await fs.promises.access(directory)
+    await fs.promises.access(directory);
   } catch (error) {
     if (error.code === 'ENOENT') {
-      await fs.promises.mkdir(directory, { recursive: true })
+      await fs.promises.mkdir(directory, { recursive: true });
     } else {
-      throw error
+      throw error;
     }
   }
 }
 
-async function moveToUploadsDir(uploadsDirectory, filename) {
-  const source = filename
-  const basename = path.basename(filename)
-  const destination = path.join(uploadsDirectory, basename)
+export async function moveToUploadsDir(uploadsDirectory, filename) {
+  const source = filename;
+  const basename = path.basename(filename);
+  const destination = path.join(uploadsDirectory, basename);
 
-  fs.promises.rename(source, destination)
-  return destination
+  await fs.promises.rename(source, destination);
+  return destination;
 }
-
 
 function renameProperty(obj, from, to) {
   let res = {
     ...obj,
     [to]: obj[from],
-  }
-  delete res[from]
-  return res
+  };
+  delete res[from];
+  return res;
 }
 
-function userNameToUser(entity) {
-  return renameProperty(entity.dataValues, 'username', 'user')
-}
-
-module.exports = {
-  ensureDirectoryExists,
-  moveToUploadsDir,
-  userNameToUser
+export function userNameToUser(entity) {
+  return renameProperty(entity.dataValues, 'username', 'user');
 }
