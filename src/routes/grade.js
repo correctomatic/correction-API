@@ -1,11 +1,11 @@
-import env from '../config/env'
-import logger from '../logger'
-import { GRADE_SCHEMA } from '@schemas/grade_schemas'
-import authenticator from '@middleware/authenticator'
-import { ensureDirectoryExists, moveToUploadsDir } from '@lib/utils'
-import { createCorrectionJob } from '@lib/correctomatic'
-import { ParamsError, ImageError } from '@lib/errors'
-import { errorResponse } from '@lib/requests'
+import env from '../config/env.js'
+import logger from '../logger.js'
+import { GRADE_SCHEMA } from '#schemas/grade_schemas.js'
+import authenticator from '#middleware/authenticator.js'
+import { ensureDirectoryExists, moveToUploadsDir } from '#lib/utils.js'
+import { createCorrectionJob } from '#lib/correctomatic.js'
+import { ParamsError, ImageError } from '#lib/errors.js'
+import { errorResponse } from '#lib/requests.js'
 
 const UPLOAD_DIRECTORY = env.UPLOAD_DIRECTORY
 

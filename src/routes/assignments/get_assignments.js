@@ -1,8 +1,8 @@
 import logger from '../../logger'
-import { validateQueryParams, errorResponse, setLimitAndOffset } from '@lib/requests'
-import { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } from '@schemas/assignment_schemas'
-import authenticator from '@middleware/authenticator'
-import { userNameToUser } from '@lib/utils'
+import { validateQueryParams, errorResponse, setLimitAndOffset } from '#lib/requests'
+import { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } from '#schemas/assignment_schemas'
+import authenticator from '#middleware/authenticator'
+import { userNameToUser } from '#lib/utils'
 
 export default async function routes(fastify, _options) {
 

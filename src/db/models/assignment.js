@@ -1,10 +1,10 @@
 'use strict'
-import { Model } from 'sequelize';
+import { Model } from 'sequelize'
 
 export default (sequelize, DataTypes) => {
   class Assignment extends Model {
     static associate(models) {
-      Assignment.belongsTo(models.User, { foreignKey: 'username', as: 'owner' });
+      Assignment.belongsTo(models.User, { foreignKey: 'username', as: 'owner' })
     }
   }
 
@@ -52,7 +52,7 @@ export default (sequelize, DataTypes) => {
         fields: ['username','assignment']
       }
     ]
-  });
+  })
 
-  return Assignment;
-};
+  return Assignment
+}

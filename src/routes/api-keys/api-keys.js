@@ -2,10 +2,10 @@ import {
   CREATE_API_KEY_SCHEMA,
   LIST_API_KEYS_SCHEMA,
   DELETE_API_KEY_SCHEMA
-} from '@schemas/api-keys_schemas'
-import authenticator from '@middleware/authenticator'
-import { errorResponse } from '@lib/requests'
-import { sequelizeError } from '@lib/errors'
+} from '#schemas/api-keys_schemas'
+import authenticator from '#middleware/authenticator'
+import { errorResponse } from '#lib/requests'
+import { sequelizeError } from '#lib/errors'
 
 export default async function routes(fastify, _options) {
 

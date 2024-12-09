@@ -1,8 +1,8 @@
 import logger from '../../logger.js'
-import authenticator from '@middleware/authenticator.js'
-import { CREATE_ASSIGNMENT_SCHEMA } from '@schemas/assignment_schemas.js'
-import { errorResponse, assignmentSuccessResponse } from '@lib/requests.js'
-import { handleSequelizeError } from '@lib/errors.js'
+import authenticator from '#middleware/authenticator.js'
+import { CREATE_ASSIGNMENT_SCHEMA } from '#schemas/assignment_schemas.js'
+import { errorResponse, assignmentSuccessResponse } from '#lib/requests.js'
+import { handleSequelizeError } from '#lib/errors.js'
 import AssignmentPolicy from '@policies/assignment_policy.js'
 
 export default async function routes(fastify, _options) {

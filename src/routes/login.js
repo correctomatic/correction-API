@@ -3,8 +3,8 @@
 import jwt from 'jsonwebtoken'
 import env from '../config/env'
 import logger from '../logger'
-import { LOGIN_SCHEMA } from '@schemas/login_schema'
-import { errorResponse } from '@lib/requests'
+import { LOGIN_SCHEMA } from '#schemas/login_schema'
+import { errorResponse } from '#lib/requests'
 
 export default async function routes(fastify, _options) {
 

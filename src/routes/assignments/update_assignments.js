@@ -1,10 +1,10 @@
-import authenticator from '@middleware/authenticator.js'
+import authenticator from '#middleware/authenticator.js'
 import {
   UPDATE_OWN_ASSIGNMENT_SCHEMA,
   UPDATE_FOREIGN_ASSIGNMENT_SCHEMA,
-} from '@schemas/assignment_schemas.js'
-import { errorResponse, assignmentSuccessResponse } from '@lib/requests.js'
-import { handleSequelizeError } from '@lib/errors.js'
+} from '#schemas/assignment_schemas.js'
+import { errorResponse, assignmentSuccessResponse } from '#lib/requests.js'
+import { handleSequelizeError } from '#lib/errors.js'
 import AssignmentPolicy from '@policies/assignment_policy.js'
 
 export default async function routes(fastify, _options) {

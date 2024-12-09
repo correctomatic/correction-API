@@ -1,14 +1,14 @@
 const logger = require('../../logger')
-const authenticator = require('@middleware/authenticator.js')
+const authenticator = require('#middleware/authenticator.js')
 const UserPolicy = require('@policies/user_policy.js')
-const { handleSequelizeError } = require('@lib/errors.js')
+const { handleSequelizeError } = require('#lib/errors.js')
 
-const { validateQueryParams, errorResponse, setLimitAndOffset } = require('@lib/requests')
+const { validateQueryParams, errorResponse, setLimitAndOffset } = require('#lib/requests')
 
 const {
   GET_USERS_SCHEMA,
   CREATE_USER_SCHEMA
-} = require('@schemas/user_schemas.js')
+} = require('#schemas/user_schemas.js')
 
 async function routes(fastify, _options) {
 
