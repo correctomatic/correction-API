@@ -1,8 +1,10 @@
-const bcrypt = require('bcrypt')
-const { Sequelize } = require('sequelize')
+import { describe, it, beforeAll, afterAll } from 'vitest'
 
-const sequelize = require('../db')
-const UserModel = require('../../src/db/models/user')
+import bcrypt from 'bcrypt'
+import { Sequelize } from 'sequelize'
+
+import sequelize from '../db'
+import UserModel from '../../src/db/models/user'
 
 describe('User model', () => {
   let User
@@ -36,7 +38,6 @@ describe('User model', () => {
     } catch (error) {
       console.log(error)
     }
-
   })
 
   it('should validate the password correctly', async () => {
@@ -54,5 +55,4 @@ describe('User model', () => {
     expect(userAssignments.length).toBe(1)
     expect(userAssignments[0].title).toBe('Test Assignment')
   })
-
 })

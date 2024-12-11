@@ -1,11 +1,15 @@
+import { expect, test } from 'vitest'
 import app from '../../src/server'
 
-test('GET /api/users should return a list of users', async () => {
+test('GET /hello must greet', async () => {
   const response = await app.inject({
     method: 'GET',
-    url: '/api/users',
+    url: '/hello',
+    query: {
+      name: 'John'
+    }
   })
 
   expect(response.statusCode).toBe(200)
-  expect(response.json()).toHaveProperty('users')
+  expect(response.body).toContain('Hello, world!')
 })

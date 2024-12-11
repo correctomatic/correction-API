@@ -1,6 +1,6 @@
-const { Sequelize } = require('sequelize')
-const config = require('../sequelize/config')
+import { Sequelize } from 'sequelize'
+import config from '../sequelize/config'
 
 const sequelize = new Sequelize(config.test)
 
-module.exports = sequelize
+export default sequelize
