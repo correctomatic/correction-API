@@ -1,13 +1,10 @@
-'use strict'
+import logger from '../../logger.js'
+import { validateQueryParams, errorResponse, setLimitAndOffset } from '#lib/requests.js'
+import { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } from '#schemas/assignment_schemas.js'
+import authenticator from '#middleware/authenticator.js'
+import { userNameToUser } from '#lib/utils.js'
 
-const logger = require('../../logger')
-const { validateQueryParams, errorResponse, setLimitAndOffset } = require('@lib/requests')
-const { GET_ASSIGNMENT_SCHEMA, GET_ASSIGNMENTS_SCHEMA } = require('@schemas/assignment_schemas')
-
-const authenticator = require('@middleware/authenticator')
-const { userNameToUser } = require('@lib/utils')
-
-async function routes(fastify, _options) {
+export default async function routes(fastify, _options) {
 
   const Assignment = fastify.db.sequelize.models.Assignment
 
@@ -79,5 +76,3 @@ async function routes(fastify, _options) {
     })
 
 }
-
-module.exports = routes

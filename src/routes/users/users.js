@@ -1,14 +1,12 @@
-const logger = require('../../logger')
-const authenticator = require('@middleware/authenticator.js')
-const UserPolicy = require('@policies/user_policy.js')
-const { handleSequelizeError } = require('@lib/errors.js')
-
-const { validateQueryParams, errorResponse, setLimitAndOffset } = require('@lib/requests')
-
-const {
+import logger from '../../logger.js'
+import authenticator from '#middleware/authenticator.js'
+import UserPolicy from '#policies/user_policy.js'
+import { handleSequelizeError } from '#lib/errors.js'
+import { validateQueryParams, errorResponse, setLimitAndOffset } from '#lib/requests.js'
+import {
   GET_USERS_SCHEMA,
   CREATE_USER_SCHEMA
-} = require('@schemas/user_schemas.js')
+} from '#schemas/user_schemas.js'
 
 async function routes(fastify, _options) {
 
@@ -120,4 +118,4 @@ async function routes(fastify, _options) {
   })
 }
 
-module.exports = routes
+export default routes

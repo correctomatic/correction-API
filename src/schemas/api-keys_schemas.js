@@ -1,4 +1,4 @@
-const ERROR_RESPONSE_SCHEMA = require('./error_response_schema')
+import ERROR_RESPONSE_SCHEMA from './error_response_schema.js'
 
 const CREATE_API_KEY_RESPONSE_SCHEMA = {
   type: 'object',
@@ -85,7 +85,7 @@ const DELETE_API_KEY_SCHEMA = {
   }
 }
 
-module.exports = {
+export {
   CREATE_API_KEY_SCHEMA,
   LIST_API_KEYS_SCHEMA,
   DELETE_API_KEY_SCHEMA

@@ -1,3 +1,6 @@
+TO-DO: check vitest
+https://vitest.dev/
+
 ## Sequelize
 
 https://sequelize.org/docs/v6/getting-started/

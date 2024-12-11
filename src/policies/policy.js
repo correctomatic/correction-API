@@ -44,4 +44,4 @@ class Policy {
   }
 }
 
-module.exports = Policy
+export default Policy

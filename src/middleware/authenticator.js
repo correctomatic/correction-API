@@ -1,9 +1,7 @@
-const jwt = require('jsonwebtoken')
-
-const env = require('../config/env')
-const logger = require('../logger')
-
-const { errorResponse } = require('@lib/requests')
+import jwt from 'jsonwebtoken'
+import env from '#env'
+import logger from '../logger.js'
+import { errorResponse } from '#lib/requests.js'
 
 async function bearerAuthenticate(request) {
   const token = request.headers['authorization']?.split(' ')[1]
@@ -82,4 +80,4 @@ function authenticator(...methods) {
   }
 }
 
-module.exports = authenticator
+export default authenticator

@@ -1,9 +1,7 @@
-'use strict'
-const { Model } = require('sequelize')
-const crypto = require('crypto')
+import { Model } from 'sequelize'
+import crypto from 'crypto'
 
-module.exports = (sequelize, DataTypes) => {
-
+export default (sequelize, DataTypes) => {
   class ApiKey extends Model {
     static associate(models) {
       ApiKey.belongsTo(models.User, { foreignKey: 'username', as: 'owner' })

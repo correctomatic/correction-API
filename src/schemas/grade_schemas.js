@@ -1,4 +1,4 @@
-const ERROR_RESPONSE_SCHEMA = require('./error_response_schema')
+import ERROR_RESPONSE_SCHEMA from './error_response_schema.js'
 
 // See this: https://github.com/fastify/help/issues/525#issuecomment-932043189
 const GRADE_REQUEST_SCHEMA = {
@@ -86,6 +86,6 @@ const GRADE_SCHEMA = {
 
 }
 
-module.exports = {
+export {
   GRADE_SCHEMA,
 }

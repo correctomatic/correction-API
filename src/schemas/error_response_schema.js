@@ -7,4 +7,4 @@ const ERROR_RESPONSE_SCHEMA = {
   }
 }
 
-module.exports = ERROR_RESPONSE_SCHEMA
+export default ERROR_RESPONSE_SCHEMA

@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
 /** @type {import('sequelize-cli').Migration} */
-module.exports = {
+export default {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('ApiKeys', {
       key: {
@@ -45,4 +45,4 @@ module.exports = {
   async down (queryInterface, _Sequelize) {
     await queryInterface.dropTable('ApiKeys')
   }
-};
+}

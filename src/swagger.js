@@ -3,7 +3,7 @@ API for the Correctomatic server
 `
 
 const swaggerOptions = {
-  openapi:{
+  openapi: {
     info: {
       title: 'Correctomatic server API',
       description,
@@ -55,7 +55,6 @@ const swaggerOptions = {
   },
 }
 
-
 // Code is not showing correctly in the Swagger UI, so we add some custom CSS
 const CUSTOM_CSS = `
 .swagger-ui .markdown code {
@@ -73,12 +72,9 @@ const swaggerUiOptions = {
   theme: {
     title: 'Correctomatic server API',
     css: [
-      { filename: 'theme.css' , content: CUSTOM_CSS }
+      { filename: 'theme.css', content: CUSTOM_CSS }
     ],
   },
 }
 
-module.exports = {
-  swaggerOptions,
-  swaggerUiOptions
-}
+export { swaggerOptions, swaggerUiOptions }

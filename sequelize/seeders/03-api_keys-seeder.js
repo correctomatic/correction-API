@@ -1,10 +1,10 @@
 'use strict'
 
-const path = require('path')
-const parseCSV = require('./lib/read_csv')
+import path from 'path'
+import parseCSV from './lib/read_csv'
 
 /** @type {import('sequelize-cli').Migration} */
-module.exports = {
+export default {
   async up(queryInterface) {
     const apiKeysData = await parseCSV(path.resolve(__dirname,'./data/api_keys.csv'))
 

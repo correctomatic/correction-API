@@ -1,4 +1,4 @@
-const ERROR_RESPONSE_SCHEMA = require('./error_response_schema')
+import ERROR_RESPONSE_SCHEMA from './error_response_schema.js'
 
 const LOGIN_REQUEST_SCHEMA = {
   type: 'object',
@@ -50,6 +50,6 @@ const LOGIN_SCHEMA = {
   }
 }
 
-module.exports = {
+export {
   LOGIN_SCHEMA
 }

@@ -1,17 +1,13 @@
-'use strict'
-
-const authenticator = require('@middleware/authenticator.js')
-
-const {
+import authenticator from '#middleware/authenticator.js'
+import {
   DELETE_OWN_ASSIGNMENT_SCHEMA,
   DELETE_FOREIGN_ASSIGNMENT_SCHEMA
-} = require('@schemas/assignment_schemas.js')
+} from '#schemas/assignment_schemas.js'
+import { errorResponse } from '#lib/requests.js'
+import { handleSequelizeError } from '#lib/errors.js'
+import AssignmentPolicy from '#policies/assignment_policy.js'
 
-const { errorResponse } = require('@lib/requests.js')
-const { handleSequelizeError } = require('@lib/errors.js')
-const AssignmentPolicy = require('@policies/assignment_policy.js')
-
-async function routes(fastify, _options) {
+export default async function routes(fastify, _options) {
 
   const Assignment = fastify.db.sequelize.models.Assignment
 
@@ -61,5 +57,3 @@ async function routes(fastify, _options) {
       return deleteAssignment(username, request, reply)
     })
 }
-
-module.exports = routes

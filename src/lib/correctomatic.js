@@ -1,14 +1,12 @@
-const logger = require('../logger')
-const { putInPendingQueue } = require('./bullmq')
-const {ParamsError} = require('./errors')
+import logger from '../logger.js'
+import { putInPendingQueue } from './bullmq.js'
 
 // Docker expects environment variables as an array of strings in the form 'KEY=VALUE'
 function paramsToArray(params) {
   return Object.entries(params).map(([key, value]) => `${key}=${value}`)
 }
 
-async function createCorrectionJob(work_id, image, uploadedFile, callback, params) {
-
+export async function createCorrectionJob(work_id, image, uploadedFile, callback, params) {
   const message = {
     work_id,
     image,
@@ -20,9 +18,4 @@ async function createCorrectionJob(work_id, image, uploadedFile, callback, param
   logger.debug('Enqueuing work for grading:' + JSON.stringify(message))
   await putInPendingQueue(message)
   logger.info('Work enqueued for grading:' + JSON.stringify(message))
-}
-
-module.exports = {
-  ParamsError,
-  createCorrectionJob
 }

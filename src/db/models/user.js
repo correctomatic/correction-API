@@ -1,9 +1,7 @@
-'use strict'
-const bcrypt = require('bcrypt')
-const { Model } = require('sequelize')
+import bcrypt from 'bcrypt'
+import { Model } from 'sequelize'
 
-module.exports = (sequelize, DataTypes) => {
-
+export default (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.hasMany(models.Assignment, { foreignKey: 'username', as: 'assignments' })

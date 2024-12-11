@@ -1,6 +1,6 @@
-const { HELLO_SCHEMA } = require('@schemas/hello_schemas')
+import { HELLO_SCHEMA } from '#schemas/hello_schemas.js'
 
-async function routes(fastify, _options) {
+export default async function routes(fastify, _options) {
 
   fastify.get(
     '/hello',
@@ -10,5 +10,3 @@ async function routes(fastify, _options) {
     }
   )
 }
-
-module.exports = routes

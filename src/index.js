@@ -1,11 +1,9 @@
-const fastify = require('./server')
-const env = require('./config/env')
+import fastify from './server.js'
+import env from './config/env.js'
 const PORT = env.PORT
-
 
 // Run the server!
 try {
-
   fastify.setErrorHandler((error, _request, reply) => {
     fastify.log.error(error)
     reply.status(400).send({
@@ -13,7 +11,6 @@ try {
       message: error.message || 'An unexpected error occurred'
     })
   })
-
 
   // Uncomment this to print the routes to the console
   // fastify.ready(err => {

@@ -1,4 +1,4 @@
-const ERROR_RESPONSE_SCHEMA = require('./error_response_schema')
+import ERROR_RESPONSE_SCHEMA from './error_response_schema.js'
 
 const GET_USERS_REQUEST_SCHEMA = {
   type: 'object',
@@ -117,7 +117,7 @@ const UPDATE_FOREIGN_PASSWORR_SCHEMA = {
 }
 
 
-module.exports = {
+export {
   GET_USERS_SCHEMA,
   CREATE_USER_SCHEMA,
   UPDATE_OWN_PASSWORD_SCHEMA,

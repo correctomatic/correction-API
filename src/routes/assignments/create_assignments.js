@@ -1,16 +1,11 @@
-'use strict'
-const logger = require('../../logger')
-const authenticator = require('@middleware/authenticator.js')
+import logger from '../../logger.js'
+import authenticator from '#middleware/authenticator.js'
+import { CREATE_ASSIGNMENT_SCHEMA } from '#schemas/assignment_schemas.js'
+import { errorResponse, assignmentSuccessResponse } from '#lib/requests.js'
+import { handleSequelizeError } from '#lib/errors.js'
+import AssignmentPolicy from '#policies/assignment_policy.js'
 
-const {
-  CREATE_ASSIGNMENT_SCHEMA,
-} = require('@schemas/assignment_schemas.js')
-
-const { errorResponse, assignmentSuccessResponse } = require('@lib/requests.js')
-const { handleSequelizeError } = require('@lib/errors.js')
-const AssignmentPolicy = require('@policies/assignment_policy.js')
-
-async function routes(fastify, _options) {
+export default async function routes(fastify, _options) {
 
   const Assignment = fastify.db.sequelize.models.Assignment
   const User = fastify.db.sequelize.models.User
@@ -34,7 +29,7 @@ async function routes(fastify, _options) {
 
       const assignmentPolicy = new AssignmentPolicy(loggedUser, newAssignment)
       if (!assignmentPolicy.can('create')) {
-        return reply.status(403).send(errorResponse('You are not authorized to create an assignment for this user.'));
+        return reply.status(403).send(errorResponse('You are not authorized to create an assignment for this user.'))
       }
 
       const forUser = await User.findOne({
@@ -69,5 +64,3 @@ async function routes(fastify, _options) {
     })
 
 }
-
-module.exports = routes

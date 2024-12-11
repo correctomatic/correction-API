@@ -1,4 +1,4 @@
-const ERROR_RESPONSE_SCHEMA = require('./error_response_schema')
+import ERROR_RESPONSE_SCHEMA from './error_response_schema.js'
 
 const ASSIGNMENT_SCHEMA = {
   type: 'object',
@@ -179,7 +179,7 @@ const DELETE_FOREIGN_ASSIGNMENT_SCHEMA = {
 }
 
 
-module.exports = {
+export {
   GET_ASSIGNMENT_SCHEMA,
   GET_ASSIGNMENTS_SCHEMA,
   CREATE_ASSIGNMENT_SCHEMA,

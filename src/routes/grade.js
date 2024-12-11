@@ -1,13 +1,11 @@
-const env = require('../config/env')
-const logger = require('../logger')
-const { GRADE_SCHEMA } = require('@schemas/grade_schemas')
-
-const authenticator = require('@middleware/authenticator')
-
-const { ensureDirectoryExists, moveToUploadsDir } = require('@lib/utils')
-const { createCorrectionJob } = require('@lib/correctomatic')
-const { ParamsError, ImageError } = require('@lib/errors')
-const { errorResponse } = require('@lib/requests')
+import env from '../config/env.js'
+import logger from '../logger.js'
+import { GRADE_SCHEMA } from '#schemas/grade_schemas.js'
+import authenticator from '#middleware/authenticator.js'
+import { ensureDirectoryExists, moveToUploadsDir } from '#lib/utils.js'
+import { createCorrectionJob } from '#lib/correctomatic.js'
+import { ParamsError, ImageError } from '#lib/errors.js'
+import { errorResponse } from '#lib/requests.js'
 
 const UPLOAD_DIRECTORY = env.UPLOAD_DIRECTORY
 
@@ -52,18 +50,18 @@ function checkFileReceived(request) {
 }
 
 function filterUserParams(allowed, params) {
-  const filteredParams = {};
+  const filteredParams = {}
 
   for (const key in params) {
     if (allowed?.includes(key)) {
-      filteredParams[key] = params[key];
+      filteredParams[key] = params[key]
     }
   }
 
-  return filteredParams;
+  return filteredParams
 }
 
-async function routes(fastify, _options) {
+export default async function routes(fastify, _options) {
 
   // This API enqueues the result
 
@@ -137,8 +135,6 @@ async function routes(fastify, _options) {
     }
   )
 }
-
-module.exports = routes
 
 
 

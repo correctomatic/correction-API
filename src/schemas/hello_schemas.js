@@ -30,6 +30,6 @@ Always returns 'Hello, World!' . \
   response: HELLO_RESPONSE
 }
 
-module.exports = {
+export {
   HELLO_SCHEMA
 }

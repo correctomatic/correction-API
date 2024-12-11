@@ -1,12 +1,10 @@
+import { userNameToUser } from './utils.js'
+
 const DEFAULT_REQUEST_LIMIT = 10
 const MAX_REQUEST_LIMIT = 50
 
-const { userNameToUser } = require('./utils')
-
 function validateQueryParams(schema) {
-
   return async function (request, reply) {
-
     const allowedParams = Object.keys(schema.querystring?.properties || {})
     const queryParams = Object.keys(request.query)
 
@@ -39,9 +37,9 @@ function assignmentSuccessResponse(assignment) {
   }
 }
 
-module.exports = {
+export {
   validateQueryParams,
-  setLimitAndOffset,
   errorResponse,
+  setLimitAndOffset,
   assignmentSuccessResponse
 }

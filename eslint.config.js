@@ -1,5 +1,5 @@
-const globals = require('globals')
-const js = require('@eslint/js')
+import globals from 'globals'
+import js from '@eslint/js'
 
 const rules = {
   complexity: ['error', { max: 6 }],
@@ -68,7 +68,7 @@ const rules = {
   'valid-typeof': 'error',
 }
 
-module.exports = [
+export default [
   {
     languageOptions: {
       ecmaVersion: 2022,
